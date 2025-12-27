@@ -1,23 +1,36 @@
-export function Card({ children, className = '', style }) {
+import React from "react";
+import clsx from "clsx";
+
+export function Card({ children, className = "", variant = "default", style = {} }) {
+  const base = "bg-white rounded-xl shadow-md overflow-hidden transition-shadow hover:shadow-lg";
+
+  const variantClasses = {
+    default: "border border-gray-200",
+    outlined: "border border-gray-300 bg-gray-50",
+    elevated: "shadow-lg",
+  };
+
   return (
-    <div className={`bg-white ${className}`} style={style}>
+    <div className={clsx(base, variantClasses[variant], className)} style={style}>
       {children}
     </div>
   );
 }
 
-export function CardHeader({ children }) {
-  return <div className="p-4">{children}</div>;
+export function CardHeader({ children, className = "" }) {
+  return <div className={clsx("px-6 py-4 border-b border-gray-200", className)}>{children}</div>;
 }
 
-export function CardTitle({ children, className = '' }) {
-  return <h3 className={`${className} font-semibold`}>{children}</h3>;
+export function CardTitle({ children, className = "" }) {
+  return <h3 className={clsx("text-lg font-semibold", className)}>{children}</h3>;
 }
 
-export function CardDescription({ children }) {
-  return <p className="text-sm text-gray-600">{children}</p>;
+export function CardDescription({ children, className = "" }) {
+  return <p className={clsx("text-sm text-gray-600", className)}>{children}</p>;
 }
 
-export function CardContent({ children, className = '' }) {
-  return <div className={`p-4 ${className}`}>{children}</div>;
+export function CardContent({ children, className = "" }) {
+  return <div className={clsx("p-6", className)}>{children}</div>;
 }
+
+export default Card;
