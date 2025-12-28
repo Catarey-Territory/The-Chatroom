@@ -21,6 +21,8 @@
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
+<<<<<<< HEAD
+=======
     },
     {
       "name": "Debug: Nodemon",
@@ -31,6 +33,7 @@
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
+>>>>>>> origin/main
     }
   ]
 }
