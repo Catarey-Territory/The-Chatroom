@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserPlus, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,19 @@ export default function SignupForm({ onSuccess, onSwitchToLogin }: SignupFormPro
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    if (!success) return;
+
+    const timeoutId = setTimeout(() => {
+      if (onSuccess) {
+        onSuccess();
+      }
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [success, onSuccess]);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -79,13 +92,6 @@ export default function SignupForm({ onSuccess, onSwitchToLogin }: SignupFormPro
       } else {
         // Success! Show SMS message
         setSuccess(true);
-        
-        // Call onSuccess after a short delay to let user read the message
-        setTimeout(() => {
-          if (onSuccess) {
-            onSuccess();
-          }
-        }, 3000);
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");

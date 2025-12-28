@@ -18,7 +18,7 @@ export function validatePhoneNumber(phone: string): {
   // Remove all non-digit characters
   const digitsOnly = phone.replace(/\D/g, '');
 
-  // Check if phone has at least 10 digits (US standard)
+  // Check if phone has at least 10 digits (minimum for most international formats)
   if (digitsOnly.length < 10) {
     return { isValid: false, error: 'Phone number must be at least 10 digits' };
   }

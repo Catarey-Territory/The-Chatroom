@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { signin } from "@/lib/api";
-import { validatePhoneNumber, formatPhoneNumber } from "@/lib/phoneValidation";
+import { validatePhoneNumber } from "@/lib/phoneValidation";
 
 interface LoginFormProps {
   onSuccess?: () => void;
