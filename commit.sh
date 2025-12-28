@@ -3,7 +3,7 @@
 # Git Commit Helper Script for The Chatroom Project
 # This script helps you commit changes following project conventions
 
-set -e  # Exit on error
+set -euo pipefail  # Exit on error, undefined variables, and pipe failures
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -79,16 +79,25 @@ echo -e "${GREEN}${full_message}${NC}"
 echo ""
 
 # Ask for confirmation
-read -p "Do you want to add all changes and commit? (y/n): " confirm
+read -p "Do you want to stage and commit these changes? (y/n): " confirm
 
 if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
     echo -e "${YELLOW}Commit cancelled${NC}"
     exit 0
 fi
 
-# Stage all changes
+# Show what will be staged
+echo -e "\n${BLUE}The following changes will be staged:${NC}"
+git status --short
+
+# Stage changes (only tracked files and changes)
 echo -e "\n${BLUE}Staging changes...${NC}"
-git add -A
+git add -u  # Stage only modified and deleted files
+git add .   # Stage new files in current directory
+
+# Show final staged changes
+echo -e "\n${BLUE}Staged changes:${NC}"
+git diff --cached --stat
 
 # Commit
 echo -e "${BLUE}Committing...${NC}"
