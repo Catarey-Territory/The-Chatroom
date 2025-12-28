@@ -4,8 +4,8 @@ import { useEffect } from 'react'
 import Block from "@/components/chat/Block"
 import { PwaPrompt } from "@/components/PwaPrompt"
 import { registerServiceWorker } from "@/lib/pwa"
+import ErrorBoundary from "@/components/ui/error-boundary"
 
-<<<<<<< HEAD
 export default function Page() {
   useEffect(() => {
     registerServiceWorker()
@@ -13,17 +13,10 @@ export default function Page() {
 
   return (
     <>
-      <Block />
+      <ErrorBoundary>
+        <Block />
+      </ErrorBoundary>
       <PwaPrompt />
     </>
   )
 }
-=======
-export default function Home() {
-  return (
-    <main>
-      <Block />
-    </main>
-  );
-}
->>>>>>> origin/main
