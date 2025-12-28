@@ -148,6 +148,28 @@ npm run dev:web      # Next.js (http://localhost:3000)
 
 ---
 
+### Health Checks
+
+Quickly verify the services are healthy and connected.
+
+```bash
+# API health (expects a JSON response with status: ok)
+curl -s http://localhost:3001/health
+```
+
+From the browser console on the frontend (http://localhost:3000):
+
+```js
+(() => {
+  const s = io('http://localhost:3002', { transports: ['websocket'] });
+  s.on('connect', () => console.log('socket connected:', s.id));
+  s.on('chat message', (m) => console.log('message:', m));
+  s.emit('chat message', 'hello from UI');
+})();
+```
+
+---
+
 ## Environment Variables
 
 ```bash
