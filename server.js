@@ -1,14 +1,22 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const { startBackgroundJobs } = require('./services/backgroundJobs');
+const { initializeSocketIO } = require('./services/socketio');
 const authRoutes = require('./routes/auth');
+const chatroomRoutes = require('./routes/chatroom');
 const logger = require('./utils/logger');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
+
+// Initialize Socket.io
+const io = initializeSocketIO(server);
 
 app.use(helmet());
 app.use(cors({
@@ -20,7 +28,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Serve static files for simple chatroom demo
+app.use(express.static(path.join(__dirname, 'public')));
+
+// API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/chatroom', chatroomRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
@@ -29,34 +42,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
   startBackgroundJobs();
 });
 
-module.exports = app;
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const path = require('path');
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-io.on('connection', (socket) => {
-  console.log('user connected');
-
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+module.exports = { app, server, io };
