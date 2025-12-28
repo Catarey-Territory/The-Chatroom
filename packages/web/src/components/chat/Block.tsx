@@ -10,7 +10,7 @@ export default function Block() {
   const [tempUsername, setTempUsername] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [selectedLounge, setSelectedLounge] = useState<string | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const existingUsernames = ["Sarah M", "John D", "Carlos R", "Maria L", "Guest_1234", "Guest_5678"];
 
@@ -134,7 +134,7 @@ export default function Block() {
       return;
     }
 
-    setError("");
+    setError(null);
     setTempUsername(username);
     setUsername("");
   };
