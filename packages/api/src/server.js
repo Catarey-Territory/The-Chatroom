@@ -5,6 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { startBackgroundJobs } = require('./services/backgroundJobs');
 const authRoutes = require('./routes/auth');
+const loungeRoutes = require('./routes/lounges');
 const logger = require('./utils/logger');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/lounges', loungeRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 

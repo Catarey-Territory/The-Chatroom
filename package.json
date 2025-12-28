@@ -6,6 +6,8 @@
     "packages/*"
   ],
   "scripts": {
+    "next:dev": "next dev",
+    "next:build": "next build",
     "dev": "npm run dev --workspaces --if-present",
     "dev:api": "npm run dev -w @chatroom/api",
     "dev:socket": "npm run dev -w @chatroom/socket",
