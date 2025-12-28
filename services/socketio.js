@@ -1,5 +1,6 @@
 const { Server } = require('socket.io');
 const { PrismaClient } = require('@prisma/client');
+const { authenticateSocket } = require('../middleware/auth');
 const logger = require('../utils/logger');
 
 const prisma = new PrismaClient();
@@ -12,23 +13,8 @@ function initializeSocketIO(server) {
     }
   });
 
-  // Middleware to authenticate socket connections
-  io.use(async (socket, next) => {
-    try {
-      const token = socket.handshake.auth.token;
-      const userId = socket.handshake.auth.userId;
-      
-      if (!userId) {
-        return next(new Error('Authentication required'));
-      }
-      
-      socket.userId = userId;
-      next();
-    } catch (error) {
-      logger.error('Socket authentication error:', error);
-      next(new Error('Authentication failed'));
-    }
-  });
+  // Use authentication middleware
+  io.use(authenticateSocket);
 
   io.on('connection', (socket) => {
     logger.info(`User connected: ${socket.userId}`);

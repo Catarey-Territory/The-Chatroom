@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
+const { authenticateRequest } = require('../middleware/auth');
 const logger = require('../utils/logger');
 
 const prisma = new PrismaClient();
 
-// Get all lounges
+// Get all lounges (public endpoint)
 router.get('/lounges', async (req, res) => {
   try {
     const lounges = await prisma.lounge.findMany({
@@ -23,8 +24,8 @@ router.get('/lounges', async (req, res) => {
   }
 });
 
-// Get language rooms for a lounge
-router.get('/lounges/:loungeId/rooms', async (req, res) => {
+// Get language rooms for a lounge (requires authentication)
+router.get('/lounges/:loungeId/rooms', authenticateRequest, async (req, res) => {
   try {
     const { loungeId } = req.params;
     const rooms = await prisma.languageRoom.findMany({
@@ -40,8 +41,8 @@ router.get('/lounges/:loungeId/rooms', async (req, res) => {
   }
 });
 
-// Get chat messages for a language room
-router.get('/rooms/:roomId/messages', async (req, res) => {
+// Get chat messages for a language room (requires authentication)
+router.get('/rooms/:roomId/messages', authenticateRequest, async (req, res) => {
   try {
     const { roomId } = req.params;
     const { limit = 50, before } = req.query;
