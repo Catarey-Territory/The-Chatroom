@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
     "lib": [
       "dom",
       "dom.iterable",
@@ -12,25 +13,48 @@
     "incremental": true,
     "module": "esnext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/api/*": ["./api/*"],
+      "@/socket/*": ["./socket/*"],
+      "@/web/*": ["./web/*"],
+      "@/shared/*": ["./shared/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/utils/*": ["./utils/*"]
+    },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": ["node", "jest"]
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
+    "api/**/*.ts",
+    "api/**/*.js",
+    "socket/**/*.ts",
+    "socket/**/*.js",
+    "web/**/*.ts",
+    "web/**/*.tsx",
+    "shared/**/*.ts",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib/**/*.ts",
+    "utils/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "packages/**"
+    "packages/**",
+    "web/.next"
   ]
 }
