@@ -3,24 +3,30 @@
 ## Files to Stage & Commit
 
 ### 1. New Documentation Files ✅
+
 ```bash
 git add ARCHITECTURE.md CONSOLIDATION_CHECKLIST.md
 ```
+
 - `ARCHITECTURE.md` — Explains combined approach architecture
 - `CONSOLIDATION_CHECKLIST.md` — Tracks consolidation progress
 
 ### 2. Updated Configuration ✅
+
 ```bash
 git add package.json README.md
 ```
+
 - `package.json` — Updated scripts (root-level primary, packages secondary)
 - `README.md` — Updated features with implement/planned status
 
 ### 3. New Scripts & Placeholders ✅
+
 ```bash
 git add scripts/generateTasks.js scripts/start-all.js
 git add features/.gitkeep navigation/.gitkeep services/.gitkeep shared/.gitkeep state/.gitkeep ui/.gitkeep
 ```
+
 - `scripts/` — Task runner and launcher stubs
 - Root-level placeholders for organized structure
 

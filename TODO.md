@@ -190,7 +190,7 @@ npm run dev:web
 
 ---
 
-# Frontend
+## Frontend
 
 Next.js App Router, React components, UI/UX, styling.
 
@@ -206,6 +206,7 @@ Next.js App Router, React components, UI/UX, styling.
 - [x] Verify all shadcn/ui component imports resolve
 
 ## Pages & Routing
+
 - [x] Updated app/page.tsx to import from @/components/chat/Block
 - [x] Updated pages/index.jsx to import from @/components/chat/Block
 - [x] Updated pages/index.tsx to import from @/components/chat/Block
@@ -214,31 +215,35 @@ Next.js App Router, React components, UI/UX, styling.
 - [ ] Add proper error boundaries for graceful failures
 
 ## Styling & CSS
+
 - [x] Tailwind CSS integration (inferred from classNames)
 - [ ] Verify globals.css is loaded in app/page.tsx or _app.jsx
 - [ ] Test responsive design on mobile/tablet/desktop
 - [ ] Audit color scheme (dark mode support?)
 
-## Testing
+## Frontend Testing
+
 - [ ] Run `npm run next:dev` and verify no compilation errors
-- [ ] Open http://localhost:3000 and check chat UI loads
+- [ ] Open [http://localhost:3000](http://localhost:3000) and check chat UI loads
 - [ ] Test username creation flow
 - [ ] Test language selection (8 categories)
 - [ ] Test lounge selection and scrolling
 - [ ] Verify icons render (lucide-react)
 
 ## Performance
+
 - [ ] Check bundle size after build
 - [ ] Audit unused imports and code splitting
 - [ ] Lazy load language categories if needed
 
 ---
 
-# Backend
+## Backend
 
 Express API, Socket.IO, authentication, real-time chat.
 
 ## API Routes
+
 - [ ] Verify /api/auth/signup endpoint works
 - [ ] Verify /api/auth/signin endpoint works
 - [ ] Verify /api/auth/guest endpoint works
@@ -251,6 +256,7 @@ Express API, Socket.IO, authentication, real-time chat.
 - [ ] Add proper HTTP status codes and error responses
 
 ## WebSocket / Real-Time Chat
+
 - [ ] Test Socket.IO server on port 3002
 - [ ] Implement room joining (by language/lounge ID)
 - [ ] Implement message broadcasting within rooms
@@ -259,6 +265,7 @@ Express API, Socket.IO, authentication, real-time chat.
 - [ ] Implement presence tracking (user list per lounge)
 
 ## Authentication
+
 - [ ] Verify JWT token generation works
 - [ ] Verify JWT token refresh works
 - [ ] Test guest session creation
@@ -267,6 +274,7 @@ Express API, Socket.IO, authentication, real-time chat.
 - [ ] Add CSRF protection (already has middleware)
 
 ## Server Setup
+
 - [x] Separate API server (server.js, port 3001)
 - [x] Separate Socket.IO server (socket-server.js, port 3002)
 - [x] Fixed duplicate Express declarations
@@ -276,14 +284,16 @@ Express API, Socket.IO, authentication, real-time chat.
 - [ ] Add proper logging and debugging
 
 ## Database Queries
+
 - [ ] Implement user creation in signup
 - [ ] Implement user lookup in signin
 - [ ] Implement session creation/deletion
 - [ ] Implement chat message storage
 - [ ] Add proper indexes for query performance
 
-## Security
-- [ ] Review CORS configuration (currently http://localhost:3000)
+## Backend Security
+
+- [ ] Review CORS configuration (currently <http://localhost:3000>)
 - [ ] Add helmet for security headers
 - [ ] Validate all user inputs on API routes
 - [ ] Implement rate limiting properly
@@ -291,11 +301,12 @@ Express API, Socket.IO, authentication, real-time chat.
 
 ---
 
-# Database
+## Database
 
 Prisma ORM, schema design, migrations, data models.
 
 ## Schema & Models
+
 - [ ] Review prisma/schema.prisma for completeness
 - [ ] Verify User model has all needed fields (email, phone, password, username, etc.)
 - [ ] Verify Session model for temporary sessions
@@ -305,6 +316,7 @@ Prisma ORM, schema design, migrations, data models.
 - [ ] Add soft deletes if needed
 
 ## Migrations
+
 - [x] Review existing migration: 003_verification_tables.sql
 - [ ] Create migration for User table
 - [ ] Create migration for Session table
@@ -314,6 +326,7 @@ Prisma ORM, schema design, migrations, data models.
 - [ ] Verify database schema matches models
 
 ## Indexes & Performance
+
 - [ ] Add index on User.email for fast lookups
 - [ ] Add index on User.phone for fast lookups
 - [ ] Add index on Session.userId for joins
@@ -321,6 +334,7 @@ Prisma ORM, schema design, migrations, data models.
 - [ ] Add index on ChatMessage.createdAt for sorting
 
 ## Testing & Queries
+
 - [ ] Test user creation query
 - [ ] Test user lookup by email
 - [ ] Test user lookup by phone
@@ -329,6 +343,7 @@ Prisma ORM, schema design, migrations, data models.
 - [ ] Verify prisma client is properly initialized (lib/prisma.ts)
 
 ## Environment & Connection
+
 - [ ] Configure DATABASE_URL in .env
 - [ ] Test database connection on startup
 - [ ] Add connection pooling for production
@@ -336,11 +351,12 @@ Prisma ORM, schema design, migrations, data models.
 
 ---
 
-# Bugs & Fixes
+## Bugs & Fixes
 
 Known issues, blockers, and fixes needed.
 
 ## Fixed Issues
+
 - [x] JSX syntax error in Block.tsx line 457 (malformed className)
 - [x] Duplicate Express declarations in server.js
 - [x] Socket.IO port conflict (running on same port as API)
@@ -352,6 +368,7 @@ Known issues, blockers, and fixes needed.
 - [x] TypeScript module resolution for progress component
 
 ## Current Blockers ⚠️
+
 - [ ] TypeScript errors in old `components/chat/Block.tsx` (5 type errors)
   - Action: Fix `selectedLanguage` type annotation on line 14
   - Status: Preventing clean compilation
@@ -359,6 +376,7 @@ Known issues, blockers, and fixes needed.
 - [ ] Database not initialized (need to run prisma:migrate)
 
 ## High Priority 🔴
+
 - [ ] Fix TypeScript errors in Block.tsx
 - [ ] Set up environment variables for all packages
 - [ ] Initialize PostgreSQL database
@@ -369,6 +387,7 @@ Known issues, blockers, and fixes needed.
 - [ ] Test Socket.IO connection from browser console
 
 ## Medium Priority 🟡
+
 - [ ] Connect frontend to backend APIs
 - [ ] Implement authentication flow (login/signup)
 - [ ] Add proper error handling to all API endpoints
@@ -378,6 +397,7 @@ Known issues, blockers, and fixes needed.
 - [ ] Add real-time messaging functionality
 
 ## Low Priority 🟢
+
 - [ ] Audit performance and bundle size
 - [ ] Add unit/integration tests
 - [ ] Set up CI/CD pipeline
@@ -387,6 +407,7 @@ Known issues, blockers, and fixes needed.
 - [ ] Create admin dashboard
 
 ## Resolved But Should Monitor
+
 - TypeScript strictness relaxed to unblock development
   - Future: Add proper type definitions for components and re-enable strict mode
 - Some shadcn`packages/api/.env` from `.env.example`
@@ -398,13 +419,14 @@ Known issues, blockers, and fixes needed.
   - [ ] Configure TWILIO credentials (optional)
 - [ ] Create `packages/socket/.env` from `.env.example`
   - [ ] Configure SOCKET_PORT (default 3002)
-  - [ ] Configure FRONTEND_URL (http://localhost:3000)
+  - [ ] Configure FRONTEND_URL (<http://localhost:3000>)
 - [ ] Create `packages/web/.env.local` (new file)
-  - [ ] Configure NEXT_PUBLIC_API_URL (http://localhost:3001)
-  - [ ] Configure NEXT_PUBLIC_SOCKET_URL (http://localhost:3002)
+  - [ ] Configure NEXT_PUBLIC_API_URL (<http://localhost:3001>)
+  - [ ] Configure NEXT_PUBLIC_SOCKET_URL (<http://localhost:3002>)
 - [ ] Validate all environment variables on startup
 
 ## Development
+
 - [x] Document setup instructions in README.md
 - [x] Document monorepo structure in APPLICATIONS.md
 - [x] Add npm scripts for common tasks
@@ -418,7 +440,9 @@ Known issues, blockers, and fixes needed.
 - [ ] Add environment variable validation on startup
 - [ ] Create database seeding script with test data
 - [ ] Add development utility scripts (db:reset, db:seed, db:studio)
-## Development
+
+##
+
 - [ ] Document setup instructions in README.md
 - [ ] Add npm scripts for common tasks
   - `npm run dev` — Start all servers (API, Socket.IO, Next.js)
@@ -430,19 +454,22 @@ Known issues, blockers, and fixes needed.
 - [ ] Add environment variable validation on startup
 
 ## Build & Deployment
+
 - [ ] Configure Next.js build process (`npm run next:build`)
 - [ ] Test production build locally
 - [ ] Set up Docker containers (optional)
 - [ ] Configure deployment target (Vercel, AWS, Heroku, etc.)
 - [ ] Set up environment variables in deployment platform
 
-## Testing
+## Automated Testing
+
 - [ ] Add Jest for unit testing
 - [ ] Add Cypress/Playwright for E2E testing
 - [ ] Set up test coverage reporting
 - [ ] Create test fixtures and mocks
 
 ## CI/CD
+
 - [ ] Set up GitHub Actions workflows
   - Run linter on push
   - Run tests on push
@@ -451,6 +478,7 @@ Known issues, blockers, and fixes needed.
 - [ ] Set up automated deployments
 
 ## Monitoring & Logging
+
 - [ ] Configure logging service (Winston, Pino, etc.)
 - [ ] Add error tracking (Sentry, etc.)
 - [ ] Set up uptime monitoring
@@ -471,6 +499,7 @@ x] Update README.md with setup instructions
 ## 📦 PACKAGE-SPECIFIC TASKS
 
 ### packages/web (Frontend)
+
 - [ ] Fix TypeScript errors in Block.tsx
 - [ ] Create API client utilities
 - [ ] Create Socket.IO client wrapper
@@ -486,6 +515,7 @@ x] Update README.md with setup instructions
 - [ ] Add accessibility features (ARIA labels)
 
 ### packages/api (Backend API)
+
 - [ ] Test all authentication endpoints
 - [ ] Add request validation middleware
 - [ ] Implement user CRUD operations
@@ -500,6 +530,7 @@ x] Update README.md with setup instructions
 - [ ] Add health check endpoint improvements
 
 ### packages/socket (WebSocket Server)
+
 - [ ] Test Socket.IO connection
 - [ ] Implement room management
 - [ ] Add message broadcasting
@@ -511,8 +542,10 @@ x] Update README.md with setup instructions
 - [ ] Add message history on join
 - [ ] Create admin broadcasting
 - [ ] Add rate limiting for messages
+- [ ] Add rate limiting for messages
 
 ### packages/shared (Shared Code)
+
 - [ ] Create TypeScript type definitions
 - [ ] Add validation schemas (Zod or Yup)
 - [ ] Create shared constants
@@ -581,6 +614,7 @@ x] Update README.md with setup instructions
 - [ ] Audit dependencies for vulnerabilities
 
 ## Documentation
+
 - [ ] Update README.md with setup instructions
 - [ ] Document API endpoints
 - [ ] Document WebSocket message formats
