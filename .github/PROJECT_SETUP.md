@@ -172,13 +172,14 @@ done
 ### Link PRs to Issues
 
 Use keywords in PR descriptions:
-
+<!-- 
 ```
-
-Closes #1
+Closes #1.
 Fixes #2
 Resolves #3
-```
+```.
+
+ -->
 
 ## Milestones
 
