@@ -7,6 +7,9 @@
 
 
 
+
+
+
     {
       "name": "Dev: Express + Next (nodemon)",
       "type": "node",
@@ -18,28 +21,25 @@
       "restart": true,
       "skipFiles": ["<node_internals>/**"]
     },
-    {
-      "name": "Start: Production Server",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"]
-<<<<<<< HEAD
-=======
-    },
-    {
-      "name": "Debug: Nodemon",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev:debug"],
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"]
->>>>>>> origin/main
-    }
+{
+  "name": "Start: Production Server",
+  "type": "node",
+  "request": "launch",
+  "runtimeExecutable": "npm",
+  "runtimeArgs": ["run", "start"],
+  "cwd": "${workspaceFolder}",
+  "console": "integratedTerminal",
+  "skipFiles": ["<node_internals>/**"]
+},
+{
+  "name": "Debug: Nodemon",
+  "type": "node",
+  "request": "launch",
+  "runtimeExecutable": "npm",
+  "runtimeArgs": ["run", "dev:debug"],
+  "cwd": "${workspaceFolder}",
+  "console": "integratedTerminal",
+  "skipFiles": ["<node_internals>/**"]
+}
   ]
 }
