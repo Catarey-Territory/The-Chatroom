@@ -23,6 +23,7 @@ This file maintains a **self-contained project** approach that can run without s
 - Simple microservices with limited scope
 
 **When to split into multiple files:**
+
 - Production applications with complex business logic
 - Team collaboration requiring clear module boundaries
 - Code reuse across multiple projects
