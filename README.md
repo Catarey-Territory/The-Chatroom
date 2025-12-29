@@ -30,27 +30,61 @@ The-Chatroom/
 
 ## Features
 
+### ✅ Currently Implemented
+
 - **Multi-tier Authentication**
-  - Guest sessions
-  - Phone number registration
-  - JWT-based sessions with access & refresh tokens
+  - ✅ Guest sessions with temporary usernames
+  - ✅ Age verification (18+ check at entry)
+  - ✅ JWT token structure (access & refresh tokens)
+
+- **Real-time Chat Foundation**
+  - ✅ Language-based room structure (8 languages)
+  - ✅ Country-specific lounges
+  - ✅ Socket.IO server setup
+  - ✅ UI for room selection and messaging
+
+- **Account Tiers UI**
+  - ✅ Creator account features displayed
+  - ✅ Viewer account features displayed
+  - ✅ Guest access features displayed
+
+### 🚧 Planned / In Progress
+
+- **Multi-tier Authentication**
+  - 🚧 Phone number registration
+  - 🚧 Password hashing & verification
+  - 🚧 Session persistence to database
+  - 🚧 Sign in / Sign up flows
 
 - **Real-time Chat**
-  - WebSocket messaging via Socket.IO
-  - Language-based rooms & lounges
-  - Online/offline presence tracking
+  - 🚧 Message storage to database
+  - 🚧 Message history/pagination
+  - 🚧 Online/offline presence tracking
+  - 🚧 Typing indicators
+  - 🚧 User list per lounge
 
 - **Marketplace**
-  - User-generated content sales
-  - Payment transaction management
+  - 🚧 User-generated content uploads
+  - 🚧 Content sales & payments
+  - 🚧 Payment transaction management
+  - 🚧 Creator marketplace dashboard
 
 - **Moderation**
-  - User reporting
-  - Moderation actions and audit logs
+  - 🚧 User reporting system
+  - 🚧 Moderation actions & enforcement
+  - 🚧 Audit logs for moderation events
+  - 🚧 Content flagging/removal
 
 - **Verification**
-  - Age verification
-  - ID/document verification
+  - 🚧 ID/document verification
+  - 🚧 Age verification backend
+  - 🚧 Verification retention policies
+
+- **Additional Features**
+  - 🚧 User profiles
+  - 🚧 Private messaging
+  - 🚧 User blocking/reports
+  - 🚧 Admin dashboard
 
 ---
 
