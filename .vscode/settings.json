@@ -9,5 +9,8 @@
                 "copilot/gpt-4o"
             ]
         }
-    }
+    },
+    "github.copilot.chat.anthropic.tools.websearch.maxUses": 2,
+    "js/ts.hover.maximumLength": 500,
+    "github.copilot.chat.tools.memory.enabled": true
 }
