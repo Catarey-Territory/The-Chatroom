@@ -72,7 +72,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               </div>
             </Alert>
             <Button
-              variant="default"
+              variant="error"
               onClick={this.handleReload}
               className="w-full"
             >
