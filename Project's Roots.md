@@ -16,6 +16,7 @@ This file maintains a **self-contained project** approach that can run without s
 - **Zero Configuration** — No webpack, no bundlers, no complex toolchains
 
 **When to use self-contained approach:**
+
 - Early-stage prototyping and MVP development
 - Demo applications and proof-of-concepts
 - Learning/teaching projects
@@ -39,6 +40,7 @@ This documentation bridges both approaches: start self-contained, evolve to prod
 This is a minimal harness to exercise all listed scenarios, including handling unknown options that result in a "Nothing happened" path and error popups for users. Errors do not sign users off unless a creator explicitly opts to kick/ban/remove.
 
 ### Files (Included in Run-Tests Logic)
+
 - `scenarios.json` — Declarative list of scenarios, options, and expected outcomes.
 - `run-tests.js` — Executes every scenario/option and prints a table of results, flagging the unknown path as an expected error that should surface a popup.
 - `policy.json` — Defines allowed enforcement actions and sets the default `stay` action so errors/popup paths do not sign users off unless a creator explicitly chooses kick/ban/remove.
@@ -220,6 +222,7 @@ Add test cases to `scenarios.json`:
 A single-file Express + Socket.IO chatroom application for rapid prototyping and testing. Contains all backend and frontend code in one executable file.
 
 **Features:**
+
 - Guest and registered user authentication
 - Real-time messaging with Socket.IO
 - Multi-language room support (8 languages)
@@ -236,6 +239,7 @@ node app-standalone.js
 ```
 
 **API Endpoints:**
+
 - `GET /health` — Server health and statistics
 - `POST /api/auth/guest` — Create guest session
 - `POST /api/auth/signup` — Register new user
@@ -245,16 +249,19 @@ node app-standalone.js
 - `GET /api/rooms/:room/messages` — Get room message history
 
 **Socket.IO Events:**
+
 - `join-room` — Join a language room
 - `chat-message` — Send message to current room
 - `typing` / `stop-typing` — Typing indicators
 - `user-joined` / `user-left` — Room presence notifications
 
 **Configuration:**
+
 - `PORT` — Server port (default: 3000)
 - `JWT_SECRET` — Token signing key (default: dev key)
 
 **Production Notes:**
+
 - Replace in-memory storage with database (PostgreSQL/MongoDB)
 - Set proper JWT_SECRET environment variable
 - Add rate limiting and CSRF protection
@@ -344,12 +351,14 @@ Missing standard folders for maintainable projects that should be added for prod
 ### Dependency & Environment Files
 
 **Package Management:**
+
 - `package.json` — Main dependencies and scripts
 - `package-lock.json` — Locked dependency versions
 - `.nvmrc` — Node.js version specification
 - `pnpm-workspace.yaml` — Monorepo workspace configuration (if using pnpm)
 
 **Environment Configuration:**
+
 - `.env` — Local development environment variables (git-ignored)
 - `.env.example` — Template for required environment variables
 - `.env.production` — Production-specific overrides
@@ -358,6 +367,7 @@ Missing standard folders for maintainable projects that should be added for prod
 - `config/production.json` — Production overrides
 
 **Required Environment Variables:**
+
 ```bash
 # Database
 DATABASE_URL="postgresql://user:password@localhost:5432/chatroom"
@@ -398,6 +408,7 @@ LOG_LEVEL="info|debug|warn|error"
 **GitHub Actions Workflow (.github/workflows/):**
 
 **1. Continuous Integration (.github/workflows/ci.yml):**
+
 ```yaml
 name: CI Pipeline
 on: [push, pull_request]
@@ -416,7 +427,9 @@ jobs:
 ```
 
 **2. Continuous Deployment (.github/workflows/deploy.yml):**
+
 ```yaml
+
 name: Deploy to Production
 on:
   push:
@@ -434,6 +447,7 @@ jobs:
 ```
 
 **Pre-commit Hooks (.husky/):**
+
 - Format check (Prettier)
 - Lint check (ESLint)
 - Type check (TypeScript)
@@ -441,6 +455,7 @@ jobs:
 - Commit message validation (Conventional Commits)
 
 **Deployment Targets:**
+
 - Vercel (Next.js frontend)
 - Railway/Render (API + Socket.IO)
 - AWS EC2/ECS (Full stack)
@@ -451,6 +466,7 @@ jobs:
 ### Security Measures
 
 **Authentication & Authorization:**
+
 - JWT token rotation (access + refresh)
 - bcrypt password hashing (12 rounds minimum)
 - Rate limiting on all endpoints
@@ -458,6 +474,7 @@ jobs:
 - Session timeout and cleanup
 
 **Data Protection:**
+
 - AES-256-GCM encryption for PII (phone numbers)
 - HTTPS/TLS in production
 - Secure cookie settings (httpOnly, secure, sameSite)
@@ -465,6 +482,7 @@ jobs:
 - XSS protection (input sanitization)
 
 **Infrastructure Security:**
+
 ```javascript
 // Helmet.js security headers
 app.use(helmet({
@@ -493,6 +511,7 @@ app.use(cors({
 ```
 
 **Secrets Management:**
+
 - Never commit secrets to git
 - Use environment variables
 - Rotate secrets regularly
@@ -500,7 +519,9 @@ app.use(cors({
 - Separate secrets per environment
 
 **Dependency Security:**
+
 ```bash
+
 npm audit              # Check for vulnerabilities
 npm audit fix          # Auto-fix vulnerabilities
 npx snyk test          # Advanced security scanning
@@ -514,7 +535,9 @@ npm outdated           # Check for outdated packages
 **Move from Embedded to Standalone Frontend:**
 
 **1. Extract HTML/CSS/JS from app-standalone.js:**
+
 ```bash
+
 packages/web/
 ├── public/
 │   ├── index.html
@@ -537,7 +560,9 @@ packages/web/
 ```
 
 **2. API Client Library:**
+
 ```typescript
+
 // packages/web/src/lib/api.ts
 export class ChatroomAPI {
   private baseURL: string;
@@ -567,7 +592,9 @@ export class ChatroomAPI {
 ```
 
 **3. Socket.IO Client Wrapper:**
+
 ```typescript
+
 // packages/web/src/lib/socket.ts
 import { io, Socket } from 'socket.io-client';
 
@@ -603,7 +630,9 @@ export class ChatSocket {
 ### Proper Logging
 
 **Structured Logging with Winston:**
+
 ```javascript
+
 // packages/api/src/lib/logger.ts
 const winston = require('winston');
 const path = require('path');
@@ -651,7 +680,9 @@ module.exports = logger;
 ```
 
 **Usage in Application:**
+
 ```javascript
+
 const logger = require('./lib/logger');
 
 // Different log levels
@@ -677,7 +708,9 @@ logger.info('User data accessed', {
 **Replace In-Memory Storage with PostgreSQL:**
 
 **1. Prisma Schema (prisma/schema.prisma):**
+
 ```prisma
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -732,12 +765,14 @@ enum AccountType {
 ```
 
 **2. Database Migration:**
+
 ```bash
 npx prisma migrate dev --name initial_schema
 npx prisma generate
 ```
 
 **3. Prisma Client Usage:**
+
 ```javascript
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -773,6 +808,7 @@ async function getRoomMessages(roomName, limit = 50) {
 ```
 
 **4. Connection Pooling:**
+
 ```javascript
 const prisma = new PrismaClient({
   datasources: {
@@ -791,12 +827,8 @@ const prisma = new PrismaClient({
 ### Automated Tests
 
 **Test Structure:**
-```
-tests/
-├── unit/
-│   ├── auth.test.js
-│   ├── crypto.test.js
-│   └── jwt.test.js
+
+```wt.test.js
 ├── integration/
 │   ├── api/
 │   │   ├── auth.test.js
@@ -812,6 +844,7 @@ tests/
 ```
 
 **Jest Configuration (jest.config.js):**
+
 ```javascript
 module.exports = {
   testEnvironment: 'node',
@@ -837,6 +870,7 @@ module.exports = {
 ```
 
 **Unit Test Example:**
+
 ```javascript
 // tests/unit/auth.test.js
 const { signAccess, verifyAccess } = require('../../packages/api/src/lib/jwt');
@@ -858,6 +892,7 @@ describe('JWT Token Management', () => {
 ```
 
 **Integration Test Example:**
+
 ```javascript
 // tests/integration/api/auth.test.js
 const request = require('supertest');
@@ -878,6 +913,7 @@ describe('POST /api/auth/guest', () => {
 ```
 
 **E2E Test with Playwright:**
+
 ```javascript
 // tests/e2e/chat-flow.test.js
 const { test, expect } = require('@playwright/test');
@@ -906,6 +942,7 @@ test('complete chat flow', async ({ page }) => {
 ```
 
 **Test Scripts (package.json):**
+
 ```json
 {
   "scripts": {
@@ -927,13 +964,16 @@ test('complete chat flow', async ({ page }) => {
 This document is structured to support **progressive enhancement**:
 
 ### Stage 1: Self-Contained (Current)
+
 ✅ **Keep everything in one file** for as long as possible:
+
 - `app-standalone.js` — Complete application in 785 lines
 - Zero configuration, runs immediately with `node app-standalone.js`
 - Perfect for prototyping, learning, and MVP deployment
 - All logic visible and auditable in one place
 
 **When Stage 1 is sufficient:**
+
 - Project under 1000 lines
 - Single developer or small team
 - Rapid iteration needed
@@ -941,21 +981,26 @@ This document is structured to support **progressive enhancement**:
 - Educational purpose
 
 ### Stage 2: Modular Structure (Optional)
+
 Consider splitting only when **truly necessary**:
+
 - Team grows beyond 3 developers
 - Codebase exceeds 1500 lines
 - Need for isolated testing
 - Code reuse across multiple projects
 
 **Minimal split approach:**
-```
-app-standalone.js  (keep as working reference)
+
+```app-standalone.js
+
+(keep as working reference)
 ├── lib/auth.js    (only if reused elsewhere)
 ├── lib/socket.js  (only if complex logic)
 └── config.js      (only if multi-environment)
 ```
 
 ### Stage 3: Production Infrastructure (As Needed)
+
 The sections on CI/CD, security, logging, database, and tests are **reference material**, not requirements. Implement only what you need:
 
 - **Most projects need:** Environment variables, basic logging
@@ -968,6 +1013,7 @@ The sections on CI/CD, security, logging, database, and tests are **reference ma
 > "The best code is no code. The second best is self-contained code. Split only when the pain of maintaining a single file exceeds the pain of managing multiple files."
 
 **Signs you should stay self-contained:**
+
 - ✅ Development is fast and productive
 - ✅ You understand the entire codebase
 - ✅ Changes are easy to make
@@ -975,6 +1021,7 @@ The sections on CI/CD, security, logging, database, and tests are **reference ma
 - ✅ No merge conflicts
 
 **Signs you should consider splitting:**
+
 - ❌ Multiple developers editing same file constantly
 - ❌ Test suite is too slow or non-existent
 - ❌ Can't find code you need to modify

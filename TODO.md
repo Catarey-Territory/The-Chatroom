@@ -3,6 +3,7 @@
 High-level overview of active tasks and progress.
 
 ## Quick Status
+
 - [x] Monorepo structure with npm workspaces
 - [x] Component reorganization (chat/ and auth/ subdirectories)
 - [x] TypeScript/JSX configuration
@@ -15,6 +16,7 @@ High-level overview of active tasks and progress.
 - [ ] Deploy to production
 
 ## Recent Changes
+
 - ✅ Completed monorepo migration to packages/ structure
 - ✅ Set up packages/api (Express + Prisma)
 - ✅ Set up packages/socket (Socket.IO server)
@@ -36,16 +38,19 @@ High-level overview of active tasks and progress.
 ## 🎯 IMMEDIATE ACTIONS (Do These First!)
 
 ### 1. Fix TypeScript Errors ⚠️ (5 minutes)
+
 - [ ] Fix Block.tsx line 14: Change `useState(null)` to `useState<string | null>(null)`
 - [ ] This will resolve 5 type errors preventing compilation
 
 ### 2. Environment Setup (10 minutes)
+
 - [ ] Copy `packages/api/.env.example` to `packages/api/.env`
 - [ ] Configure DATABASE_URL in packages/api/.env
 - [ ] Copy `packages/socket/.env.example` to `packages/socket/.env`
 - [ ] Create `packages/web/.env.local` with API/Socket URLs
 
 ### 3. Initialize Database (5 minutes)
+
 ```bash
 cd packages/api
 npm run prisma:generate
@@ -53,6 +58,7 @@ npm run prisma:migrate
 ```
 
 ### 4. Test Application Startup (15 minutes)
+
 ```bash
 # Terminal 1
 npm run dev:api
@@ -69,7 +75,9 @@ npm run dev:web
 ## 🚀 DEVELOPMENT PRIORITIES
 
 ### Phase 1: Connect Frontend to Backend (1-2 hours)
+
 - [ ] Create `packages/web/src/lib/api.ts` - API client with fetch wrapper
+
 - [ ] Create `packages/web/src/lib/socket.ts` - Socket.IO client instance
 - [ ] Add API baseURL configuration from env variables
 - [ ] Connect Block.tsx username creation to `/api/auth/guest` endpoint
@@ -78,6 +86,7 @@ npm run dev:web
 - [ ] Handle API errors gracefully with toast notifications
 
 ### Phase 2: Authentication Flow (2-3 hours)
+
 - [ ] Create `packages/web/src/components/auth/LoginForm.tsx`
 - [ ] Create `packages/web/src/components/auth/SignupForm.tsx`
 - [ ] Implement JWT token storage (httpOnly cookies)
@@ -88,6 +97,7 @@ npm run dev:web
 - [ ] Implement token refresh logic
 
 ### Phase 3: Real-Time Chat (3-4 hours)
+
 - [ ] Create `packages/web/src/components/chat/ChatMessage.tsx`
 - [ ] Create `packages/web/src/components/chat/ChatInput.tsx`
 - [ ] Create `packages/web/src/components/chat/ChatRoom.tsx`
@@ -99,6 +109,7 @@ npm run dev:web
 - [ ] Implement message pagination/infinite scroll
 
 ### Phase 4: Account Tiers (2-3 hours)
+
 - [ ] Create `packages/web/src/components/account/CreatorFeatures.tsx`
 - [ ] Create `packages/web/src/components/account/ViewerFeatures.tsx`
 - [ ] Implement upgrade flow UI
@@ -108,6 +119,7 @@ npm run dev:web
 - [ ] Create billing history page
 
 ### Phase 5: Marketplace (4-5 hours)
+
 - [ ] Create `packages/web/src/app/marketplace/page.tsx`
 - [ ] Create `packages/web/src/components/marketplace/ItemCard.tsx`
 - [ ] Create `packages/web/src/components/marketplace/UploadForm.tsx`
@@ -122,6 +134,7 @@ npm run dev:web
 ## 🔧 TECHNICAL IMPROVEMENTS
 
 ### Code Quality
+
 - [ ] Add ESLint configuration across all packages
 - [ ] Add Prettier formatting with shared config
 - [ ] Set up Husky pre-commit hooks
@@ -130,6 +143,7 @@ npm run dev:web
 - [ ] Create coding standards document
 
 ### Testing
+
 - [ ] Add Jest configuration for unit tests
 - [ ] Add React Testing Library for component tests
 - [ ] Create test utilities in packages/shared
@@ -139,6 +153,7 @@ npm run dev:web
 - [ ] Create test fixtures and mock data
 
 ### Performance
+
 - [ ] Implement code splitting with dynamic imports
 - [ ] Add Next.js Image optimization
 - [ ] Set up Redis for session storage and caching
@@ -148,6 +163,7 @@ npm run dev:web
 - [ ] Optimize bundle size (target <200KB initial load)
 
 ### Security
+
 - [ ] Implement rate limiting on all API endpoints
 - [ ] Add input sanitization with validator.js
 - [ ] Set up HTTPS in production
@@ -179,6 +195,7 @@ npm run dev:web
 Next.js App Router, React components, UI/UX, styling.
 
 ## Components
+
 - [x] Reorganized Block components into chat/ and auth/ subdirectories
 - [x] Created badge.tsx UI component
 - [x] Created progress.tsx UI component
