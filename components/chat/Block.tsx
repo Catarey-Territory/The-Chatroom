@@ -1,4 +1,70 @@
+<<<<<<< HEAD
 export default function Block() {
+=======
+/*
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { 
+  Crown, Eye, UserCircle, Users, MessageSquare, Globe, ChevronRight, 
+  ChevronLeft, Clock, Loader2, DollarSign, Lock, ShoppingCart, Zap, 
+  Package, Video, Calendar, ExternalLink, Send, ArrowLeft, Settings, Store, Timer 
+} from "lucide-react";
+
+type Message = {
+  id: string;
+  user: string;
+  text: string;
+  timestamp: Date;
+};
+
+type Lounge = {
+  id: string;
+  name: string;
+  members: number;
+  isAll?: boolean;
+};
+
+type LanguageCategory = {
+  name: string;
+  flag: string;
+  lounges: Lounge[];
+};
+
+export default function Block() {
+  // Username state
+  const [username, setUsername] = useState<string>("");
+  const [tempUsername, setTempUsername] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  
+  // Age verification state
+  const [accountType, setAccountType] = useState<string>("guest");
+  const [showUnder18Message, setShowUnder18Message] = useState<boolean>(false);
+  
+  // Language and lounge state
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedLounge, setSelectedLounge] = useState<string | null>(null);
+<<<<<<< HEAD
+  const [error, setError] = useState<string | null>(null);
+  const [isWaiting, setIsWaiting] = useState<boolean>(false);
+=======
+  
+  // Chat room state
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentMessage, setCurrentMessage] = useState<string>("");
+  const [onlineUsers, setOnlineUsers] = useState<number>(127);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Waiting room state
+  const [isWaitingRoom, setIsWaitingRoom] = useState<boolean>(false);
+>>>>>>> origin/main
   return (
     <section style={{ padding: 24 }}>
       <h1 style={{ fontSize: 24, fontWeight: 600 }}>The Chatroom</h1>
@@ -7,8 +73,14 @@ export default function Block() {
       </p>
     </section>
   );
+<<<<<<< HEAD
 }
 /*
+=======
+  const [showMarketplace, setShowMarketplace] = useState<boolean>(false);
+  const [inChatRoom, setInChatRoom] = useState<boolean>(false);
+
+>>>>>>> origin/main
   // Language categories with country-specific lounges
   const languageCategories: LanguageCategory[] = [
       lounges: [
@@ -806,4 +878,20 @@ export default function Block() {
     </div>
   );
 }
+<<<<<<< HEAD
 */
+=======
+
+*/
+
+export default function Block() {
+  return (
+    <section style={{ padding: 24 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 600 }}>The Chatroom</h1>
+      <p style={{ marginTop: 8 }}>
+        Placeholder UI while components and data wiring are finalized.
+      </p>
+    </section>
+  );
+}
+>>>>>>> origin/main

@@ -180,111 +180,15 @@ npm run prisma:generate
 npm run prisma:migrate
 ```
 
-### 4. Run the Application
+### 4. Run Development Servers
 
-npm run clean            # Clean all build artifacts and node_modules
-npm run prisma:generate  # Generate Prisma client
-npm run prisma:migrate   # Run database migrations
-npm run build            # Build all packages
-npm run build:web        # Build web only
-npm run start            # Start all services
-npm run start:api        # Start API only
-npm run start:socket     # Start Socket.IO only
-npm run start:web        # Start Next.js only
-npm run dev              # Run all services
-npm run dev:api          # API server only
-npm run dev:socket       # Socket.IO server only
-npm run dev:web          # Next.js frontend only
-
-## Database
-
-DATABASE_URL="postgresql://user:password@localhost:5432/chatroom"
-
-## JWT Secrets
-
-ACCESS_TOKEN_SECRET="your-access-secret"
-REFRESH_TOKEN_SECRET="your-refresh-secret"
-
-## Encryption
-
-PHONE_ENC_KEY="32-byte-encryption-key"
-ENCRYPTION_KEY="fallback-key"
-
-## Twilio (optional)
-
-TWILIO_ACCOUNT_SID="optional"
-TWILIO_AUTH_TOKEN="optional"
-TWILIO_FROM_NUMBER="+1234567890"
-
-## Server Configuration
-
-PORT=3001
-SOCKET_PORT=3002
-FRONTEND_URL="<http://localhost:3000>"
-NODE_ENV="development"
-(() => {
-  const s = io('<http://localhost:3002>', { transports: ['websocket'] });
-  s.on('connect', () => console.log('socket connected:', s.id));
-  s.on('chat message', (m) => console.log('message:', m));
-  s.emit('chat message', 'hello from UI');
-})();
-
-## API health (expects a JSON response with status: ok)
-
-curl -s <http://localhost:3001/health>
-node app-standalone.js
-npm run dev:api      # API server (<http://localhost:3001>)
-npm run dev:socket   # Socket.IO (<http://localhost:3002>)
-npm run dev:web      # Next.js (<http://localhost:3000>)
-
-## First time setup
-
-./start-all.sh --setup
-
-## Start all services
-
-./start-all.sh
-
-## View logs
-
-./start-all.sh --logs
-
-## Get help
-
-./start-all.sh --help
-npm run prisma:generate
-npm run prisma:migrate
-NEXT_PUBLIC_API_URL="<http://localhost:3001>"
-NEXT_PUBLIC_SOCKET_URL="<http://localhost:3002>"
-SOCKET_PORT=3002
-FRONTEND_URL="<http://localhost:3000>"
-DATABASE_URL="postgresql://user:password@localhost:5432/chatroom"
-ACCESS_TOKEN_SECRET="your-access-secret"
-REFRESH_TOKEN_SECRET="your-refresh-secret"
-PHONE_ENC_KEY="32-byte-encryption-key"
-PORT=3001
-npm install
-nvm install
-nvm use
-**Option A: All-in-One Script (Recommended)**
+### Option A: All-in-One Script (Recommended)
 
 ```bash
-# First time setup
-./start-all.sh --setup
+# Run all services
+npm run dev
 
-# Start all services
-./start-all.sh
-
-# View logs
-./start-all.sh --logs
-
-# Get help
-./start-all.sh --help
-```
-
-### Option B: Individual Services
-
-```bash
+# Or run individually:
 npm run dev:api      # API server (http://localhost:3001)
 npm run dev:socket   # Socket.IO (http://localhost:3002)
 npm run dev:web      # Next.js (http://localhost:3000)
@@ -298,10 +202,9 @@ node app-standalone.js
 
 ## 5. Access Application
 
-- **🌐 Frontend:** <http://localhost:3000>
-- **📡 API:** <http://localhost:3001>
-- **🔌 WebSocket:** <http://localhost:3002>
-- **📊 Health Check:** <http://localhost:3001/health>
+- **Frontend:** <http://localhost:3000>
+- **API:** <http://localhost:3001>
+- **WebSocket:** <http://localhost:3002>
 
 ---
 
