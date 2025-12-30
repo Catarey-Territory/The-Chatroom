@@ -135,8 +135,10 @@ export default function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProp
             <Checkbox
               id="stay-signed-in"
               checked={staySignedIn}
-              onCheckedChange={(checked) => setStaySignedIn(!!checked)}
-              disabled={isLoading}
+              onCheckedChange={(checked) => {
+                if (isLoading) return;
+                setStaySignedIn(!!checked);
+              }}
             />
             <Label
               htmlFor="stay-signed-in"
