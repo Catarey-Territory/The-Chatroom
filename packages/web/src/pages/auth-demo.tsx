@@ -8,6 +8,7 @@ export default function AuthDemo() {
   const handleLoginSuccess = () => {
     console.log("Login successful!");
     // In a real app, redirect to the chat or home page
+    // NOTE: This alert is for demo purposes only. In production, replace with proper navigation/state-driven success UI.
     alert("Login successful! JWT tokens stored in cookies.");
   };
 
