@@ -219,7 +219,7 @@ export default function SignupForm({ onSuccess, onSwitchToLogin }: SignupFormPro
               maxLength={4}
             />
             <p className="text-xs text-muted-foreground">
-              Must be at least 13 years old to sign up
+              Optional - Must be at least 13 years old if provided
             </p>
           </div>
 
