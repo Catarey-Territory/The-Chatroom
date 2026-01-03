@@ -3,6 +3,7 @@
 A concise, practical reference for where to place changes and how to update existing code across the project.
 
 ## Contents
+
 - Backend API routes
 - Server middleware & config
 - Socket.IO real-time features
@@ -21,18 +22,20 @@ A concise, practical reference for where to place changes and how to update exis
 
 ## Backend API Routes
 
-- Location: [routes/auth.js](../../routes/auth.js)
-- Mounted under: `/api/auth` from [server/server.js](../../server/server.js)
+- Location: [packages/api/src/routes/auth.js](../../packages/api/src/routes/auth.js)
+- Mounted under: `/api/auth` from [packages/api/src/server.js](../../packages/api/src/server.js)
 
 ### Add a new endpoint
-1. Implement route in `routes/auth.js`.
+
+1. Implement route in `packages/api/src/routes/auth.js`.
 2. Apply `authLimiter` or `apiLimiter` as appropriate.
 3. Validate input; use Prisma for data access.
 4. Return JSON responses; avoid leaking internal errors.
 
 Example:
+
 ```js
-// routes/auth.js
+// packages/api/src/routes/auth.js
 const { authLimiter } = require('../middleware/rateLimiter');
 const { prisma } = require('../lib/prisma');
 
@@ -50,6 +53,7 @@ router.post('/profile', authLimiter, async (req, res) => {
 ```
 
 ### Modify an existing endpoint
+
 - Keep behavior stable; update validation or Prisma queries as needed.
 - Re-run manual tests with curl or Postman and check logs.
 
@@ -57,14 +61,15 @@ router.post('/profile', authLimiter, async (req, res) => {
 
 ## Server Middleware & Config
 
-- Location: [server/server.js](../../server/server.js)
+- Location: [packages/api/src/server.js](../../packages/api/src/server.js)
 - Add global middlewares (Helmet, CORS, parsers) here.
 - Mount routers and handle errors centrally.
 
 Example (apply middleware globally):
+
 ```js
-// server/server.js
-const csrfProtection = require('../middleware/csrf');
+// packages/api/src/server.js
+const csrfProtection = require('./middleware/csrf');
 app.use(csrfProtection);
 ```
 
@@ -72,13 +77,14 @@ app.use(csrfProtection);
 
 ## Socket.IO Real-time Features
 
-- Location: [server/socket-server.js](../../server/socket-server.js)
+- Location: [packages/socket/src/socket-server.js](../../packages/socket/src/socket-server.js)
 - Add listeners/emitters in `io.on('connection', ...)`.
 - Test client: [public/client.js](../../public/client.js)
 
 Example (new event):
+
 ```js
-// server/socket-server.js
+// packages/socket/src/socket-server.js
 io.on('connection', (socket) => {
   socket.on('typing', (roomId) => {
     socket.to(roomId).emit('typing', { userId: socket.id });
@@ -90,19 +96,23 @@ io.on('connection', (socket) => {
 
 ## Database & Prisma Schema
 
-- Location: [prisma/schema.prisma](../../prisma/schema.prisma)
-- Client: [lib/prisma.ts](../../lib/prisma.ts)
+- Location: [prisma/schema.prisma](../../prisma/schema.prisma) (root level)
+- Client: [packages/api/src/lib/prisma.ts](../../packages/api/src/lib/prisma.ts)
 
 ### Change a model
+
 1. Edit `schema.prisma` (add fields/enums/relations).
 2. Generate & migrate:
+
 ```bash
 npm run prisma:generate
 npm run prisma:migrate
 ```
-3. Update queries in route handlers/services.
+
+1. Update queries in route handlers/services.
 
 Example (add field):
+
 ```prisma
 model User {
   id           String @id @default(uuid())
@@ -115,12 +125,13 @@ model User {
 
 ## Background Jobs
 
-- Location: [services/backgroundJobs.js](../../services/backgroundJobs.js)
-- Start jobs from: [server/server.js](../../server/server.js)
+- Location: [packages/api/src/services/backgroundJobs.js](../../packages/api/src/services/backgroundJobs.js)
+- Start jobs from: [packages/api/src/server.js](../../packages/api/src/server.js)
 
 Example (new job):
+
 ```js
-// services/backgroundJobs.js
+// packages/api/src/services/backgroundJobs.js
 export async function recalcStats() {
   try {
     const count = await prisma.user.count();
@@ -140,17 +151,19 @@ export function startBackgroundJobs() {
 
 ## Frontend UI Updates
 
-- Main UI: [components/chat/Block.tsx](../../components/chat/Block.tsx)
-- Entry: [pages/index.tsx](../../pages/index.tsx) or [app/page.tsx](../../app/page.tsx)
+- Main UI: [packages/web/src/components/chat/Block.tsx](../../packages/web/src/components/chat/Block.tsx)
+- Entry: [packages/web/src/pages/index.tsx](../../packages/web/src/pages/index.tsx) or [packages/web/src/app/page.tsx](../../packages/web/src/app/page.tsx)
   - Prefer one router (App or Pages). Remove duplicates to avoid confusion.
 
 ### Add a new feature
+
 - Extend internal state and handlers in `Block.tsx`.
-- Reuse UI components under [components/ui](../../components/ui).
+- Reuse UI components under [packages/web/src/components/ui](../../packages/web/src/components/ui).
 
 Example:
+
 ```tsx
-// components/chat/Block.tsx
+// packages/web/src/components/chat/Block.tsx
 const [showMarketplace, setShowMarketplace] = useState(false);
 // toggle and render a new section accordingly
 ```
@@ -159,14 +172,15 @@ const [showMarketplace, setShowMarketplace] = useState(false);
 
 ## Security Adjustments
 
-- CSRF: [middleware/csrf.js](../../middleware/csrf.js)
-- Rate limiting: [middleware/rateLimiter.js](../../middleware/rateLimiter.js)
-- JWT: [lib/jwt.ts](../../lib/jwt.ts)
-- Encryption (AES-256-GCM): [lib/crypto.js](../../lib/crypto.js)
+- CSRF: [packages/api/src/middleware/csrf.js](../../packages/api/src/middleware/csrf.js)
+- Rate limiting: [packages/api/src/middleware/rateLimiter.js](../../packages/api/src/middleware/rateLimiter.js)
+- JWT: [packages/api/src/lib/jwt.ts](../../packages/api/src/lib/jwt.ts)
+- Encryption (AES-256-GCM): [packages/api/src/lib/crypto.js](../../packages/api/src/lib/crypto.js)
 
 Example (apply rate limiting per route):
+
 ```js
-// routes/auth.js
+// packages/api/src/routes/auth.js
 const { apiLimiter } = require('../middleware/rateLimiter');
 router.post('/profile', apiLimiter, async (req, res) => { /* ... */ });
 ```
@@ -180,6 +194,7 @@ router.post('/profile', apiLimiter, async (req, res) => { /* ... */ });
 - Env vars: see README section and `.env` file.
 
 ### Add a new script
+
 ```json
 {
   "scripts": {
@@ -198,11 +213,15 @@ router.post('/profile', apiLimiter, async (req, res) => { /* ... */ });
 - Prisma: run migrations and validate CRUD operations.
 
 Commands:
+
 ```bash
-# Start servers
-npm run dev            # API
-npm run socket:dev     # WebSocket
-npm run next:dev       # Frontend
+# Start all servers
+npm run dev              # All services
+
+# Or start individually
+npm run dev:api          # API (packages/api)
+npm run dev:socket       # WebSocket (packages/socket)
+npm run dev:web          # Frontend (packages/web)
 
 # Prisma
 npm run prisma:generate
@@ -217,9 +236,10 @@ Use these patterns to replace legacy snippets with shared utilities and standard
 
 ### Replace inline phone encryption with shared helper
 
-- Where: [routes/auth.js](../../routes/auth.js)
+- Where: [packages/api/src/routes/auth.js](../../packages/api/src/routes/auth.js)
 
 Old:
+
 ```js
 const crypto = require('crypto');
 // ...
@@ -228,6 +248,7 @@ const encrypted = Buffer.concat([cipher.update(phone, 'utf8'), cipher.final()]);
 ```
 
 New:
+
 ```js
 const { encryptPhone } = require('../lib/crypto');
 // ...
@@ -236,15 +257,17 @@ const encryptedPhone = encryptPhone(phoneNumber);
 
 ### Replace manual JWT signing with shared helper
 
-- Where: [routes/auth.js](../../routes/auth.js)
+- Where: [packages/api/src/routes/auth.js](../../packages/api/src/routes/auth.js)
 
 Old:
+
 ```js
 const jwt = require('jsonwebtoken');
 const token = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 ```
 
 New:
+
 ```js
 const { signAccess } = require('../lib/jwt');
 const accessToken = signAccess({ userId });
@@ -252,15 +275,17 @@ const accessToken = signAccess({ userId });
 
 ### Apply standard rate limiting
 
-- Where: [routes/auth.js](../../routes/auth.js)
+- Where: [packages/api/src/routes/auth.js](../../packages/api/src/routes/auth.js)
 
 Old:
+
 ```js
 // no rate limit applied
 router.post('/signin', async (req, res) => { /* ... */ });
 ```
 
 New:
+
 ```js
 const { authLimiter } = require('../middleware/rateLimiter');
 router.post('/signin', authLimiter, async (req, res) => { /* ... */ });
@@ -268,17 +293,20 @@ router.post('/signin', authLimiter, async (req, res) => { /* ... */ });
 
 ### Use shared Prisma client instead of ad-hoc instantiation
 
-- Where: any server file
+- Where: any API server file
 
 Old:
+
 ```js
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 ```
 
 New:
+
 ```js
-const { prisma } = require('../lib/prisma');
+// In packages/api/src/
+const { prisma } = require('./lib/prisma');
 ```
 
 ---
@@ -286,23 +314,27 @@ const { prisma } = require('../lib/prisma');
 ## Quick Checklists
 
 ### When adding an API feature
-- [ ] Route in `routes/auth.js`
+
+- [ ] Route in `packages/api/src/routes/auth.js`
 - [ ] Input validation & rate limiter
 - [ ] Prisma queries
 - [ ] Response shape documented
 
 ### When changing data models
-- [ ] Update `schema.prisma`
-- [ ] Generate & migrate
-- [ ] Update queries/usages
+
+- [ ] Update `prisma/schema.prisma`
+- [ ] Generate & migrate: `npm run prisma:generate && npm run prisma:migrate`
+- [ ] Update queries/usages in `packages/api/src/`
 
 ### When adding background work
-- [ ] Job function in `services/backgroundJobs.js`
+
+- [ ] Job function in `packages/api/src/services/backgroundJobs.js`
 - [ ] Register in `startBackgroundJobs()`
 
 ### When updating frontend
-- [ ] State + handlers in `Block.tsx`
-- [ ] UI under `components/ui`
+
+- [ ] State + handlers in `packages/web/src/components/chat/Block.tsx`
+- [ ] UI under `packages/web/src/components/ui`
 
 ---
 
@@ -320,7 +352,22 @@ For detailed workflow guidance, see the companion doc: [UPDATE_WORKFLOW.md](./UP
 ---
 
 For deeper details, see:
+
 - [docs/COMPLETE_CODEBASE.md](../COMPLETE_CODEBASE.md)
 - [README.md](../../README.md)
 - [CONTRIBUTING.md](../../CONTRIBUTING.md)
 - [LICENSE](../../LICENSE)
+
+The-Chatroom/
+├── packages/
+│   ├── api/          # Backend REST API (Express + Prisma + PostgreSQL)
+│   ├── socket/       # WebSocket server (Socket.IO)
+│   ├── web/          # Frontend (Next.js 14 + React 18 + TypeScript)
+│   └── shared/       # Shared types, schemas, and utilities
+├── prisma/           # Database schema and migrations
+├── docs/             # Documentation
+├── public/           # Static assets & client scripts
+├── package.json      # Workspace configuration
+├── tsconfig.json     # TypeScript config (root and per-package)
+├── .gitignore
+└── README.md

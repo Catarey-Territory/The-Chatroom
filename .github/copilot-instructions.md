@@ -25,25 +25,40 @@ The Chatroom is a real-time chat application with multi-tier authentication, lan
 
 ## Architecture & Project Structure
 
+**📦 Monorepo Structure:** This project uses npm workspaces with separate packages for API, Socket.IO, frontend, and shared code.
+
 ```
 The-Chatroom/
-├── server/              # API and Socket.IO servers
-│   ├── server.js        # Express API server (port 3001)
-│   └── socket-server.js # Socket.IO server (port 3002)
-├── routes/              # Express API routes (auth, etc.)
-├── lib/                 # Core libraries (JWT, crypto, Prisma, Twilio)
-├── middleware/          # Express middleware (CSRF, rate limiting)
-├── services/            # Background jobs and services
-├── utils/               # Logger, security helpers
-├── components/          # React UI components
-│   ├── chat/           # Chat-related components
-│   └── auth/           # Authentication components
-├── pages/               # Next.js Pages Router (legacy)
-├── app/                 # Next.js App Router
+├── packages/
+│   ├── api/             # Backend REST API
+│   │   └── src/
+│   │       ├── server.js        # Express API server (port 3001)
+│   │       ├── routes/          # API routes (auth, etc.)
+│   │       ├── lib/             # Core libraries (JWT, crypto, Prisma, Twilio)
+│   │       ├── middleware/      # Express middleware (CSRF, rate limiting)
+│   │       ├── services/        # Background jobs and services
+│   │       └── utils/           # Logger, security helpers
+│   ├── socket/          # WebSocket server
+│   │   └── src/
+│   │       └── socket-server.js # Socket.IO server (port 3002)
+│   ├── web/             # Next.js frontend
+│   │   └── src/
+│   │       ├── app/             # Next.js App Router
+│   │       ├── pages/           # Next.js Pages Router (legacy)
+│   │       ├── components/      # React UI components
+│   │       │   ├── chat/       # Chat-related components
+│   │       │   ├── auth/       # Authentication components
+│   │       │   └── ui/         # shadcn/ui components
+│   │       ├── lib/             # Frontend utilities
+│   │       └── styles/          # Global CSS and Tailwind styles
+│   └── shared/          # Shared types and utilities
+│       └── src/
+│           ├── types/           # TypeScript type definitions
+│           ├── schemas/         # JSON schemas
+│           └── utils/           # Shared utilities
 ├── prisma/              # Database schema and migrations
 │   └── schema.prisma   # Prisma schema definition
 ├── public/              # Static assets & client scripts
-├── styles/              # Global CSS and Tailwind styles
 └── docs/                # Documentation
 ```
 
@@ -68,14 +83,17 @@ Required environment variables (see `.env.example`):
 Three separate processes are required for development:
 
 ```bash
-# Terminal 1: API server (Express)
+# Terminal 1: API server (Express) - packages/api
+npm run dev:api
+
+# Terminal 2: Socket.IO server - packages/socket
+npm run dev:socket
+
+# Terminal 3: Next.js frontend - packages/web
+npm run dev:web
+
+# Or run all services at once:
 npm run dev
-
-# Terminal 2: Socket.IO server
-npm run socket:dev
-
-# Terminal 3: Next.js frontend
-npm run next:dev
 ```
 
 ### Database Setup
@@ -113,8 +131,10 @@ npm run prisma:generate   # Generate Prisma client
    - Respect existing code style in files you modify
 
 3. **Imports:**
-   - Use path aliases: `@/components/*`, `@/lib/*`, `@/utils/*`
-   - Prefer relative imports for nearby files
+   - **API package:** Use relative imports (`./routes/`, `./lib/`, `./utils/`)
+   - **Web package:** Use path aliases (`@/components/*`, `@/lib/*`, `@/utils/*`) from `packages/web/src`
+   - **Shared package:** Import from `@chatroom/shared` in other packages
+   - Prefer relative imports for files within the same package
 
 4. **Naming conventions:**
    - Use camelCase for variables and functions
@@ -138,8 +158,9 @@ npm run prisma:generate   # Generate Prisma client
 
 ### Database & Prisma
 
-- **Schema location:** `prisma/schema.prisma`
-- **Client import:** Use `import prisma from '@/lib/prisma'`
+- **Schema location:** `prisma/schema.prisma` (root level)
+- **Client import in API:** Use `const { prisma } = require('./lib/prisma')` (relative path)
+- **Client import in Web:** Use `import prisma from '@/lib/prisma'` (if needed)
 - **Always regenerate:** Run `npm run prisma:generate` after schema changes
 - **Migrations:** Use `npm run prisma:migrate` for schema updates
 
@@ -186,13 +207,14 @@ Key models:
 
 ### API Routes
 
-- Located in `routes/` directory
+- Located in `packages/api/src/routes/` directory
 - Export Express router objects
 - Use middleware: `csrf`, `rateLimiter`, `authenticate`
 - Return JSON responses with appropriate status codes
 
 Example:
 ```javascript
+// packages/api/src/routes/auth.js
 const router = require('express').Router();
 const { authenticate } = require('../middleware/auth');
 
@@ -210,9 +232,10 @@ router.get('/endpoint', authenticate, async (req, res) => {
 
 ### React Components
 
-- Place in appropriate subdirectory (`components/chat/`, `components/auth/`, `components/ui/`)
+- Place in appropriate subdirectory (`packages/web/src/components/chat/`, `components/auth/`, `components/ui/`)
 - Use TypeScript interfaces for props when possible
 - Follow shadcn/ui component patterns for UI elements
+- Import UI components using `@/components/ui/*` path alias
 
 ### Error Handling
 
@@ -235,15 +258,15 @@ router.get('/endpoint', authenticate, async (req, res) => {
 
 ### Adding a New API Endpoint
 
-1. Create route handler in `routes/` directory
+1. Create route handler in `packages/api/src/routes/` directory
 2. Add middleware if needed (auth, CSRF, rate limiting)
 3. Update Prisma schema if database changes needed
 4. Run migrations: `npm run prisma:migrate`
-5. Test with all three servers running
+5. Test with all three servers running: `npm run dev`
 
 ### Adding a New React Component
 
-1. Create component in appropriate directory (`components/chat/`, `components/auth/`, `components/ui/`)
+1. Create component in appropriate directory (`packages/web/src/components/chat/`, `components/auth/`, `components/ui/`)
 2. Use TypeScript if possible (`.tsx`)
 3. Import from path alias: `import Component from '@/components/...'`
 4. Follow existing patterns in similar components
@@ -298,6 +321,22 @@ router.get('/endpoint', authenticate, async (req, res) => {
 
 ## Important Notes
 
+<<<<<<< HEAD
+=======
+<<<<<<< ours
+1. **Monorepo structure:** Project uses npm workspaces with separate packages
+2. **Three servers:** Always remember this app requires three separate processes
+3. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types
+4. **Package imports:**
+   - API: Use relative imports (`./lib/`, `./routes/`)
+   - Web: Use path aliases (`@/components/`, `@/lib/`)
+   - Shared: Import as `@chatroom/shared` from other packages
+5. **Prisma workflow:** Schema change → migrate → generate → update code
+6. **Security first:** Never commit secrets, always validate inputs
+7. **Minimal changes:** Keep PRs focused and avoid unnecessary refactoring
+8. **Documentation:** Update relevant docs when making significant changes
+=======
+>>>>>>> main
 1. **Three servers:** Always remember this app requires three separate processes (API, Socket.IO, Next.js)
 2. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types
 3. **Path aliases:** Always use `@/*` imports, not relative paths across directories
@@ -307,6 +346,10 @@ router.get('/endpoint', authenticate, async (req, res) => {
 7. **Documentation:** Update relevant docs when making significant changes
 8. **Environment setup:** Copy `.env.example` to `.env` before starting development
 9. **Server startup order:** Start API server first, then Socket.IO, then Next.js frontend
+<<<<<<< HEAD
+=======
+>>>>>>> theirs
+>>>>>>> main
 
 ## Getting Help
 
