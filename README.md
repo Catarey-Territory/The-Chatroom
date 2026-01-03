@@ -8,7 +8,8 @@ A real-time chat application with multi-tier authentication, language-specific l
 
 ## 📦 Packages
 
-```
+```,
+
 The-Chatroom/
 ├── packages/
 │   ├── api/          # Backend REST API (Express + Prisma + PostgreSQL)
@@ -30,27 +31,61 @@ The-Chatroom/
 
 ## Features
 
+### ✅ Currently Implemented
+
 - **Multi-tier Authentication**
-  - Guest sessions
-  - Phone number registration
-  - JWT-based sessions with access & refresh tokens
+  - ✅ Guest sessions with temporary usernames
+  - ✅ Age verification (18+ check at entry)
+  - ✅ JWT token structure (access & refresh tokens)
+
+- **Real-time Chat Foundation**
+  - ✅ Language-based room structure (8 languages)
+  - ✅ Country-specific lounges
+  - ✅ Socket.IO server setup
+  - ✅ UI for room selection and messaging
+
+- **Account Tiers UI**
+  - ✅ Creator account features displayed
+  - ✅ Viewer account features displayed
+  - ✅ Guest access features displayed
+
+### 🚧 Planned / In Progress
+
+- **Multi-tier Authentication**
+  - 🚧 Phone number registration
+  - 🚧 Password hashing & verification
+  - 🚧 Session persistence to database
+  - 🚧 Sign in / Sign up flows
 
 - **Real-time Chat**
-  - WebSocket messaging via Socket.IO
-  - Language-based rooms & lounges
-  - Online/offline presence tracking
+  - 🚧 Message storage to database
+  - 🚧 Message history/pagination
+  - 🚧 Online/offline presence tracking
+  - 🚧 Typing indicators
+  - 🚧 User list per lounge
 
 - **Marketplace**
-  - User-generated content sales
-  - Payment transaction management
+  - 🚧 User-generated content uploads
+  - 🚧 Content sales & payments
+  - 🚧 Payment transaction management
+  - 🚧 Creator marketplace dashboard
 
 - **Moderation**
-  - User reporting
-  - Moderation actions and audit logs
+  - 🚧 User reporting system
+  - 🚧 Moderation actions & enforcement
+  - 🚧 Audit logs for moderation events
+  - 🚧 Content flagging/removal
 
 - **Verification**
-  - Age verification
-  - ID/document verification
+  - 🚧 ID/document verification
+  - 🚧 Age verification backend
+  - 🚧 Verification retention policies
+
+- **Additional Features**
+  - 🚧 User profiles
+  - 🚧 Private messaging
+  - 🚧 User blocking/reports
+  - 🚧 Admin dashboard
 
 ---
 
@@ -67,6 +102,7 @@ The-Chatroom/
 ---
 
 ## Project Structure
+
 The-Chatroom/
 ├── server/           # API and Socket.IO servers
 ├── routes/           # API routes
@@ -87,6 +123,19 @@ The-Chatroom/
 ### Prerequisites
 
 - Node.js 18+
+
+Note on Node versions:
+
+- This project targets Node 18.x. Newer major versions (e.g., Node 24) can crash due to dependency incompatibilities.
+- A `.nvmrc` is provided. If you use `nvm`, run:
+
+```bash
+nvm install
+nvm use
+```
+
+Alternatively, install Node 18 via your preferred manager (asdf/Volta) before running dev scripts.
+
 - PostgreSQL database
 - npm or yarn
 
@@ -101,6 +150,7 @@ npm install
 Each package has its own environment configuration:
 
 **API Package** (`packages/api/.env`):
+
 ```bash
 DATABASE_URL="postgresql://user:password@localhost:5432/chatroom"
 ACCESS_TOKEN_SECRET="your-access-secret"
@@ -110,12 +160,14 @@ PORT=3001
 ```
 
 **Socket Package** (`packages/socket/.env`):
+
 ```bash
 SOCKET_PORT=3002
 FRONTEND_URL="http://localhost:3000"
 ```
 
 **Web Package** (`packages/web/.env.local`):
+
 ```bash
 NEXT_PUBLIC_API_URL="http://localhost:3001"
 NEXT_PUBLIC_SOCKET_URL="http://localhost:3002"
@@ -128,41 +180,31 @@ npm run prisma:generate
 npm run prisma:migrate
 ```
 
-### 4. Run the Application
+### 4. Run Development Servers
 
-**Option A: All-in-One Script (Recommended)**
+### Option A: All-in-One Script (Recommended)
+
 ```bash
-# First time setup
-./start-all.sh --setup
+# Run all services
+npm run dev
 
-# Start all services
-./start-all.sh
-
-# View logs
-./start-all.sh --logs
-
-# Get help
-./start-all.sh --help
-```
-
-**Option B: Individual Services**
-```bash
+# Or run individually:
 npm run dev:api      # API server (http://localhost:3001)
 npm run dev:socket   # Socket.IO (http://localhost:3002)
 npm run dev:web      # Next.js (http://localhost:3000)
 ```
 
-**Option C: Standalone Single-File App**
+### Option C: Standalone Single-File App
+
 ```bash
 node app-standalone.js
 ```
 
-### 5. Access Application
+## 5. Access Application
 
-- **🌐 Frontend:** http://localhost:3000
-- **📡 API:** http://localhost:3001
-- **🔌 WebSocket:** http://localhost:3002
-- **📊 Health Check:** http://localhost:3001/health
+- **Frontend:** <http://localhost:3000>
+- **API:** <http://localhost:3001>
+- **WebSocket:** <http://localhost:3002>
 
 ---
 
@@ -175,7 +217,7 @@ Quickly verify the services are healthy and connected.
 curl -s http://localhost:3001/health
 ```
 
-From the browser console on the frontend (http://localhost:3000):
+From the browser console on the frontend (<http://localhost:3000>):
 
 ```js
 (() => {
@@ -217,6 +259,7 @@ NODE_ENV="development"
 ## NPM Scripts
 
 ### Development
+
 ```bash
 npm run dev              # Run all services
 npm run dev:api          # API server only
@@ -225,6 +268,7 @@ npm run dev:web          # Next.js frontend only
 ```
 
 ### Production
+
 ```bash
 npm run build            # Build all packages
 npm run build:web        # Build web only
@@ -234,13 +278,15 @@ npm run start:socket     # Start Socket.IO only
 npm run start:web        # Start Next.js only
 ```
 
-### Database
+### Database Setup
+
 ```bash
 npm run prisma:generate  # Generate Prisma client
 npm run prisma:migrate   # Run database migrations
 ```
 
 ### Utilities
+
 ```bash
 npm run clean            # Clean all build artifacts and node_modules
 ```
@@ -254,7 +300,7 @@ npm run clean            # Clean all build artifacts and node_modules
 
 ---
 
-_Last updated: December 28, 2025_
+### Last updated: December 28, 2025
 
 ⸻
 
