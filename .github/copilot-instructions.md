@@ -124,6 +124,13 @@ npm run prisma:generate   # Generate Prisma client
 
 ### Next.js Routing
 
+- **App Router (primary):** Use `packages/web/src/app/` for new routes following Next.js 13+ conventions
+- **Pages Router (legacy):** Located in `packages/web/src/pages/` - avoid adding new pages here
+- **File-based routing:** Each folder in `app/` becomes a route segment
+- **Dynamic routes:** Use `[param]` for dynamic segments (e.g., `app/lounge/[id]/page.tsx`)
+- **Layouts:** Use `layout.tsx` for shared UI across routes
+- **Route handlers:** Create `route.ts` files for API endpoints in App Router
+
 
 ### Database & Prisma
 
@@ -172,9 +179,14 @@ router.get('/endpoint', authenticate, async (req, res) => {
 
 ## Testing Approach
 
-  1. API server (npm run dev)
-  2. Socket.IO server (npm run socket:dev)
-  3. Next.js frontend (npm run next:dev)
+This project uses manual testing during development. To test your changes:
+
+1. Start the API server: `npm run dev:api`
+2. Start the Socket.IO server: `npm run dev:socket`
+3. Start the Next.js frontend: `npm run dev:web`
+4. Or start all services at once: `npm run dev`
+
+Test your changes by interacting with the application in the browser and verifying expected behavior.
 
 ## Common Tasks
 
@@ -221,25 +233,17 @@ router.get('/endpoint', authenticate, async (req, res) => {
 
 ## Documentation
 
+Available documentation resources:
+
+- **README.md:** Project overview, setup instructions, and getting started guide
+- **docs/COMPLETE_CODEBASE.md:** Comprehensive codebase documentation
+- **docs/TODO.md:** Planned features and improvements
+- **docs/*-schema.md:** Database schema documentation for each model
+- **.github/copilot-instructions.md:** This file - contributor guidelines and conventions
+
 
 ## Important Notes
 
-<<<<<<< HEAD
-=======
-<<<<<<< ours
-1. **Monorepo structure:** Project uses npm workspaces with separate packages
-2. **Three servers:** Always remember this app requires three separate processes
-3. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types
-4. **Package imports:**
-   - API: Use relative imports (`./lib/`, `./routes/`)
-   - Web: Use path aliases (`@/components/`, `@/lib/`)
-   - Shared: Import as `@chatroom/shared` from other packages
-5. **Prisma workflow:** Schema change → migrate → generate → update code
-6. **Security first:** Never commit secrets, always validate inputs
-7. **Minimal changes:** Keep PRs focused and avoid unnecessary refactoring
-8. **Documentation:** Update relevant docs when making significant changes
-=======
->>>>>>> main
 1. **Three servers:** Always remember this app requires three separate processes (API, Socket.IO, Next.js)
 2. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types
 3. **Path aliases:** Always use `@/*` imports, not relative paths across directories
@@ -249,10 +253,6 @@ router.get('/endpoint', authenticate, async (req, res) => {
 7. **Documentation:** Update relevant docs when making significant changes
 8. **Environment setup:** Copy `.env.example` to `.env` before starting development
 9. **Server startup order:** Start API server first, then Socket.IO, then Next.js frontend
-<<<<<<< HEAD
-=======
->>>>>>> theirs
->>>>>>> main
 
 ## Getting Help
 
