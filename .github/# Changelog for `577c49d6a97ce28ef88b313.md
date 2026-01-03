@@ -10,3 +10,28 @@ Use the 👍 and 👎 buttons in the editor toolbar to provide feedback on this 
 
 - Adds initial project plan
 - Enhances Copilot instructions with additional guidance for improved user onboarding
+
+## CONTRIBUTING to The Chatroom
+
+## How to Contribute
+
+1. Fork the repository and create your branch from `main`.
+2. Follow the coding standards in `copilot-instructions.md`.
+3. Use Conventional Commits for commit messages.
+4. Test your changes with all three servers running.
+5. Open a pull request with a clear description of your changes.
+
+## Code Style
+
+- Use TypeScript for new features.
+- Respect existing file types.
+- Use path aliases (`@/*`) for imports.
+
+## PR Review
+
+- Keep pull requests focused and minimal.
+- Update documentation if your changes affect setup or usage.
+
+## Getting Help
+
+- Check the `docs/` directory for more information.
