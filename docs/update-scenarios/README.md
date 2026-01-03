@@ -357,3 +357,17 @@ For deeper details, see:
 - [README.md](../../README.md)
 - [CONTRIBUTING.md](../../CONTRIBUTING.md)
 - [LICENSE](../../LICENSE)
+
+The-Chatroom/
+├── packages/
+│   ├── api/          # Backend REST API (Express + Prisma + PostgreSQL)
+│   ├── socket/       # WebSocket server (Socket.IO)
+│   ├── web/          # Frontend (Next.js 14 + React 18 + TypeScript)
+│   └── shared/       # Shared types, schemas, and utilities
+├── prisma/           # Database schema and migrations
+├── docs/             # Documentation
+├── public/           # Static assets & client scripts
+├── package.json      # Workspace configuration
+├── tsconfig.json     # TypeScript config (root and per-package)
+├── .gitignore
+└── README.md
