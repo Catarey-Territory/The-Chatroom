@@ -100,7 +100,7 @@ export function LoginForm({ onSubmit, isLoading, error, onSignupClick }: LoginFo
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Error display - state comes from props */}
           {error && (
-            <Alert variant="destructive">
+            <Alert variant="error">
               {error}
             </Alert>
           )}
