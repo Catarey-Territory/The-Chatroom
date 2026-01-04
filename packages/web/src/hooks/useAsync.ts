@@ -115,11 +115,15 @@ export function useAsync<T = any>(
     }
   }, [asyncFunction, isLoading, options]);
 
+  // Execute immediately if requested
+  // We intentionally omit execute from deps to avoid infinite loops
+  // The execute function is stable due to useCallback with proper deps
   useEffect(() => {
     if (options.immediate) {
       execute();
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options.immediate]); // Only re-run if immediate option changes
 
   const reset = useCallback(() => {
     setIsLoading(false);

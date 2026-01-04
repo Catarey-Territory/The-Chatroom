@@ -22,7 +22,7 @@
  * ```
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 export interface UseApiRequestOptions<T = any> {
   /**
@@ -85,6 +85,13 @@ export function useApiRequest<T = any>(
   
   // Use ref to track if component is mounted to prevent state updates after unmount
   const isMountedRef = useRef(true);
+
+  // Cleanup: Set mounted ref to false when component unmounts
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Memoize the execute function to avoid unnecessary re-renders
   const execute = useCallback(
