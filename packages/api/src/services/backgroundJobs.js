@@ -65,7 +65,7 @@ export function startBackgroundJobs() {
 export function stopBackgroundJobs() {
   logger.info('Stopping background jobs...');
   intervals.forEach(interval => clearInterval(interval));
-  intervals.length = 0;
+  intervals.splice(0, intervals.length); // Clear all elements from array
   logger.info('Background jobs stopped');
 }
 
