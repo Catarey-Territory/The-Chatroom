@@ -15,55 +15,43 @@ The Chatroom is a real-time chat application with multi-tier authentication, lan
 
 ## Technology Stack
 
-- **Backend:** Node.js 18+, Express, Socket.IO
-- **Frontend:** Next.js 14, React 18, TypeScript
-- **Database:** PostgreSQL with Prisma ORM
-- **Authentication:** JWT (access & refresh tokens), bcrypt, CSRF protection
-- **Real-time:** Socket.IO for WebSocket connections
-- **UI:** Tailwind CSS, shadcn/ui components, Lucide icons
-- **SMS:** Twilio (optional)
-- **Storage:** AWS S3 (optional, for file uploads)
-- **Utilities:** express-rate-limit, helmet, cookie-parser
-
 
 ## Architecture & Project Structure
 
-**📦 Monorepo Structure:** This project uses npm workspaces with separate packages for API, Socket.IO, frontend, and shared code.
+**📦 Combined Approach:** This project uses a hybrid structure with development at the root level and optional packages for distribution.
 
 ```
 The-Chatroom/
-├── packages/
-│   ├── api/             # Backend REST API
-│   │   └── src/
-│   │       ├── server.js        # Express API server (port 3001)
-│   │       ├── routes/          # API routes (auth, etc.)
-│   │       ├── lib/             # Core libraries (JWT, crypto, Prisma, Twilio)
-│   │       ├── middleware/      # Express middleware (CSRF, rate limiting)
-│   │       ├── services/        # Background jobs and services
-│   │       └── utils/           # Logger, security helpers
-│   ├── socket/          # WebSocket server
-│   │   └── src/
-│   │       └── socket-server.js # Socket.IO server (port 3002)
-│   ├── web/             # Next.js frontend
-│   │   └── src/
-│   │       ├── app/             # Next.js App Router
-│   │       ├── pages/           # Next.js Pages Router (legacy)
-│   │       ├── components/      # React UI components
-│   │       │   ├── chat/       # Chat-related components
-│   │       │   ├── auth/       # Authentication components
-│   │       │   └── ui/         # shadcn/ui components
-│   │       ├── lib/             # Frontend utilities
-│   │       └── styles/          # Global CSS and Tailwind styles
-│   └── shared/          # Shared types and utilities
-│       └── src/
-│           ├── types/           # TypeScript type definitions
-│           ├── schemas/         # JSON schemas
-│           └── utils/           # Shared utilities
-├── prisma/              # Database schema and migrations
-│   └── schema.prisma   # Prisma schema definition
-├── public/              # Static assets & client scripts
-└── docs/                # Documentation
+├── api/                # Primary API implementation (root level)
+│   ├── server.js      # Express API server (port 3001)
+│   ├── routes/        # API routes (auth.js, lounges.js)
+│   ├── middleware/    # Express middleware (rateLimiter.js)
+│   ├── services/      # Background jobs and services
+│   └── utils/         # Logger, security helpers
+│
+├── socket/            # Primary WebSocket implementation (root level)
+│   └── socket-server.js # Socket.IO server (port 3002)
+│
+├── web/               # Primary Next.js frontend (root level)
+│   ├── app/           # Next.js App Router
+│   ├── components/    # React UI components
+│   │   └── chat/      # Chat-related components
+│   ├── lib/           # Frontend utilities
+│   └── package.json   # Web dependencies
+│
+├── packages/          # Package workspace (for distribution)
+│   ├── api/           # API package exports
+│   │   ├── src/       # API source (server.js, routes/, lib/, etc.)
+│   │   └── prisma/    # Database schema (schema.prisma)
+│   ├── socket/        # Socket.IO package
+│   ├── web/           # Web package
+│   └── shared/        # Shared types and utilities
+│
+├── public/            # Static assets
+└── docs/              # Documentation
 ```
+
+**Important:** Development happens primarily at root level (`api/`, `socket/`, `web/`), while `packages/` mirrors this structure for npm workspace compatibility.
 
 ## Development Setup
 
@@ -76,13 +64,13 @@ Required environment variables (see `.env.example`):
 Three separate processes are required for development:
 
 ```bash
-# Terminal 1: API server (Express) - packages/api
+# Terminal 1: API server (Express) - root/api
 npm run dev:api
 
-# Terminal 2: Socket.IO server - packages/socket
+# Terminal 2: Socket.IO server - root/socket
 npm run dev:socket
 
-# Terminal 3: Next.js frontend - packages/web
+# Terminal 3: Next.js frontend - root/web
 npm run dev:web
 
 # Or run all services at once:
@@ -131,96 +119,33 @@ npm run prisma:generate   # Generate Prisma client
 
 ### React Component Patterns
 
-- Use functional components with hooks (`useState`, `useEffect`, `useContext`)
-- Keep components focused and single-purpose
-- Extract reusable logic into custom hooks
-- Use TypeScript for type safety in new components
-- Follow existing component structure in `packages/web/src/components/`
-
-Example:
-```tsx
-// packages/web/src/components/chat/MessageList.tsx
-import { useState, useEffect } from 'react';
-import type { Message } from '@chatroom/shared';
-
-export function MessageList() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  
-  // Component logic...
-  
-  return (
-    <div className="message-list">
-      {/* JSX */}
-    </div>
-  );
-}
-```
 
 ### Next.js Routing
 
-- **App Router** (primary): Use for new pages in `packages/web/src/app/`
-- **Pages Router** (legacy): Existing pages in `packages/web/src/pages/`
-- Dynamic routes: Use `[param]` folders in app directory
-- API routes: Place in `packages/api/src/routes/` (not Next.js API routes)
-- Server components by default, use `"use client"` when needed
 
 ### Database & Prisma
 
-- **Schema location:** `packages/api/prisma/schema.prisma`
-- **Workflow:** Edit schema → `npm run prisma:migrate` → `npm run prisma:generate`
-- **Client usage:** Import from `@prisma/client`
-- **Transactions:** Use Prisma transactions for complex operations
-- **Migrations:** Always create migrations, never use `prisma db push` in production
 
 Key models:
-- **User** - Account information, profile, tier (guest/viewer/creator)
-- **Session** - Refresh token sessions with expiry tracking
-- **TempSession** - Guest sessions with temporary usernames
-- **IDVerification** - Age and identity verification records
-- **Lounge** - Chat rooms organized by language/country
-- **LanguageRoom** - Language-specific room configurations
-- **ChatMessage** - Messages with moderation metadata
-- **MarketplaceItem** - User-generated content for sale
-- **Transaction** - Payment transactions and status tracking
-- **ModerationAction** - Audit log for moderation events
-- **UserReport** - User reporting system
 
 ## Security Practices
 
 ### Authentication & Authorization
 
-- **JWT tokens:** Access tokens (15 min expiry), refresh tokens (30 days)
-- **Token storage:** `httpOnly` cookies for refresh tokens, memory/localStorage for access tokens
-- **Password hashing:** Use bcrypt with salt rounds (configured in environment)
-- **Phone encryption:** AES-256-GCM encryption for phone numbers with `PHONE_ENC_KEY`
-- **Middleware:** Use `authenticate` middleware from `packages/api/src/middleware/auth.js`
-- **Guest sessions:** Temporary sessions with age verification for 18+ content
-
-Example:
-```javascript
-// Protected route
-router.get('/profile', authenticate, async (req, res) => {
-  // req.user contains authenticated user info
-  const user = await prisma.user.findUnique({ where: { id: req.user.id } });
-  res.json(user);
-});
-```
 
 ### Security Headers
 
-- **Helmet:** Enabled on API server for security headers
-- **CORS:** Configured to allow frontend origin only
-- **CSRF protection:** Double-submit pattern (cookie + header validation)
-- **Content Security Policy:** Configure in `packages/api/src/server.js`
 
 ### Input Validation
 
-- **Always validate:** Validate all user inputs on the backend
-- **Sanitize data:** Sanitize before database operations
-- **Phone numbers:** Validate format before encryption
-- **Rate limiting:** Applied to auth routes, API endpoints, and heartbeats
 
 ### Secrets Management
+
+- **Never commit secrets** to version control
+- Store secrets in `.env` files (gitignored)
+- Use `.env.example` for documentation only (no real values)
+- Required secrets: `ACCESS_TOKEN_SECRET`, `REFRESH_TOKEN_SECRET`, `PHONE_ENC_KEY`, `DATABASE_URL`
+- Optional secrets: Twilio credentials, AWS credentials (for S3 uploads)
 
 - **Never commit secrets:** Use `.env` files (gitignored)
 - **Environment variables:** Required secrets in `.env.example`
@@ -238,7 +163,7 @@ router.get('/profile', authenticate, async (req, res) => {
 
 Example:
 ```javascript
-// packages/api/src/routes/auth.js
+// api/routes/auth.js (root level)
 const router = require('express').Router();
 const { authenticate } = require('../middleware/auth');
 
@@ -258,68 +183,50 @@ module.exports = router;
 
 ### Socket.IO Events
 
-- **Connection handling:** Authenticate connections before allowing events
-- **Event naming:** Use clear, descriptive event names (e.g., 'chat:message', 'user:typing')
-- **Room management:** Use Socket.IO rooms for language/country-specific lounges
-- **Error handling:** Emit error events back to client on failures
-- **Broadcasting:** Use `socket.to(room).emit()` for room-specific messages
-
-Example:
-```javascript
-// packages/socket/src/socket-server.js
-io.on('connection', (socket) => {
-  socket.on('join:lounge', (loungeId) => {
-    socket.join(loungeId);
-    io.to(loungeId).emit('user:joined', { userId: socket.userId });
-  });
-  
-  socket.on('chat:message', (data) => {
-    io.to(data.loungeId).emit('chat:message', data);
-  });
-});
-```
 
 ### React Components
 
-- **Component structure:** One component per file, named export preferred
-- **Props typing:** Use TypeScript interfaces for component props
-- **State management:** Use React hooks, Context API for shared state
-- **Side effects:** Use `useEffect` with proper dependencies
-- **Event handlers:** Prefix with `handle` (e.g., `handleSubmit`, `handleClick`)
-
-Example:
-```tsx
-// packages/web/src/components/chat/ChatInput.tsx
-interface ChatInputProps {
-  onSendMessage: (message: string) => void;
-  disabled?: boolean;
-}
-
-export function ChatInput({ onSendMessage, disabled }: ChatInputProps) {
-  const [message, setMessage] = useState('');
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim()) {
-      onSendMessage(message);
-      setMessage('');
-    }
-  };
-  
-  return (
-    <form onSubmit={handleSubmit}>
-      <input 
-        value={message} 
-        onChange={(e) => setMessage(e.target.value)}
-        disabled={disabled}
-      />
-      <button type="submit">Send</button>
-    </form>
-  );
-}
-```
 
 ### Error Handling
+
+**Backend error handling:**
+```javascript
+// api/server.js - Global error handler
+app.use((err, req, res, next) => {
+  logger.error('Unhandled error:', err);
+  
+  // Don't leak error details in production
+  const isDev = process.env.NODE_ENV === 'development';
+  res.status(500).json({ 
+    error: 'Internal server error',
+    ...(isDev && { details: err.message })
+  });
+});
+
+// Route-level error handling
+router.get('/endpoint', async (req, res) => {
+  try {
+    // Handle request
+  } catch (error) {
+    logger.error('Endpoint error:', error);
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+```
+
+**Frontend error handling:**
+```typescript
+// Use error boundaries for component errors
+// Use try-catch for async operations
+try {
+  const response = await fetch('/api/endpoint');
+  if (!response.ok) throw new Error('Request failed');
+  const data = await response.json();
+} catch (error) {
+  console.error('API error:', error);
+  setError('Failed to load data');
+}
+```
 
 - **API errors:** Return appropriate HTTP status codes (400, 401, 403, 404, 500)
 - **Client errors:** Display user-friendly error messages
@@ -329,50 +236,30 @@ export function ChatInput({ onSendMessage, disabled }: ChatInputProps) {
 
 ## Testing Approach
 
-- **Manual testing:** Run all three servers and test features interactively
-- **Health checks:** Use `/health` endpoint on API server
-- **Socket testing:** Test Socket.IO connection from browser console
-- **No automated tests yet:** Focus on manual verification during development
-- **Test all servers together:** Always test with all three services running:
-  1. API server: `npm run dev:api` (port 3001)
-  2. Socket.IO server: `npm run dev:socket` (port 3002)
-  3. Next.js frontend: `npm run dev:web` (port 3000)
-
-### Manual Testing Examples
-
-**API Health Check:**
-```bash
-curl -s http://localhost:3001/health
-```
-
-**Socket.IO Connection Test (Browser Console):**
-```javascript
-const socket = io('http://localhost:3002', { transports: ['websocket'] });
-socket.on('connect', () => console.log('Connected:', socket.id));
-socket.on('chat:message', (msg) => console.log('Message:', msg));
-socket.emit('chat:message', { text: 'Hello from browser' });
-```
+  1. API server (npm run dev)
+  2. Socket.IO server (npm run socket:dev)
+  3. Next.js frontend (npm run next:dev)
 
 ## Common Tasks
 
 ### Adding a New API Endpoint
 
-1. Create route handler in `packages/api/src/routes/` directory
+1. Create route handler in `api/routes/` directory (root level)
 2. Add middleware if needed (auth, CSRF, rate limiting)
-3. Update Prisma schema if database changes needed
+3. Update Prisma schema if database changes needed (in `packages/api/prisma/schema.prisma`)
 4. Run migrations: `npm run prisma:migrate`
 5. Test with all three servers running: `npm run dev`
 
 ### Adding a New React Component
 
-1. Create component in appropriate directory (`packages/web/src/components/chat/`, `components/auth/`, `components/ui/`)
+1. Create component in appropriate directory (`web/components/chat/`, `web/components/ui/`)
 2. Use TypeScript if possible (`.tsx`)
 3. Import from path alias: `import Component from '@/components/...'`
 4. Follow existing patterns in similar components
 
 ### Modifying Database Schema
 
-1. Edit `prisma/schema.prisma`
+1. Edit `packages/api/prisma/schema.prisma`
 2. Run `npm run prisma:migrate` to create and apply migration
 3. Run `npm run prisma:generate` to update Prisma client
 4. Update affected code to handle schema changes
@@ -392,41 +279,40 @@ socket.emit('chat:message', { text: 'Hello from browser' });
 
 ### Common Issues
 
-1. **Port already in use:**
-   - Solution: Change `PORT` or `SOCKET_PORT` in `.env`, or stop conflicting processes
-   - Check running processes: `lsof -i :3001` or `lsof -i :3002`
-
-2. **Database connection errors:**
-   - Verify PostgreSQL is running
-   - Check `DATABASE_URL` in `.env`
-   - Run `npm run prisma:generate` and `npm run prisma:migrate`
-
-3. **Prisma client errors:**
-   - Run `npm run prisma:generate` to regenerate client
-   - Delete `node_modules/.prisma` and regenerate
-   - Ensure migrations are up to date
-
-4. **JWT/Crypto errors:**
-   - Verify `ACCESS_TOKEN_SECRET`, `REFRESH_TOKEN_SECRET`, and `PHONE_ENC_KEY` are set
-   - Keys should be at least 32 characters long
-   - Use the provided `.env.example` as a template
-
-5. **Next.js build issues:**
-   - Clear `.next/` directory: `rm -rf packages/web/.next`
-   - Clear root `.next/` if it exists: `rm -rf .next`
-   - Rebuild: `npm run dev:web`
-
-6. **Socket.IO connection failures:**
-   - Verify Socket.IO server is running on port 3002
-   - Check CORS configuration in socket server
-   - Verify `FRONTEND_URL` environment variable
-
-7. **Module not found errors:**
-   - Run `npm install` at root level
-   - Check path aliases in `tsconfig.json` (web package)
-   - Ensure imports use correct paths (`@/*` for web, relative for api)
 
 ### Debugging
+
+**Enable debug logging:**
+```bash
+# API server
+DEBUG=express:* npm run dev:api
+
+# View logs
+tail -f logs/app.log
+```
+
+**Debug API requests:**
+```bash
+# Test endpoints with curl
+curl -X POST http://localhost:3001/api/auth/csrf
+curl -X POST http://localhost:3001/api/auth/guest \
+  -H "Content-Type: application/json" \
+  -d '{"ageCategory": "PLUS_18"}'
+```
+
+**Debug database queries:**
+```javascript
+// Enable Prisma query logging
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error'],
+});
+```
+
+**Debug Socket.IO:**
+```javascript
+// Enable Socket.IO debug logging in browser
+localStorage.debug = 'socket.io-client:*';
+```
 
 - **API debugging:** Use `console.log` or Node.js debugger (`--inspect` flag)
 - **Frontend debugging:** React DevTools browser extension
@@ -435,6 +321,23 @@ socket.emit('chat:message', { text: 'Hello from browser' });
 - **Network issues:** Check browser Network tab and CORS configuration
 
 ## Documentation
+
+**Key documentation files:**
+- `README.md` - Project overview, setup, and getting started
+- `ARCHITECTURE.md` - Combined architecture approach (root + packages)
+- `CONTRIBUTING.md` - Contribution guidelines and workflows
+- `docs/COMPLETE_CODEBASE.md` - Full codebase reference
+- `docs/update-scenarios/README.md` - Where to place changes
+- `docs/update-scenarios/UPDATE_WORKFLOW.md` - Step-by-step process
+- `.env.example` - Environment variable documentation
+
+**When to update documentation:**
+- New features that change user-facing behavior
+- API endpoint additions or changes
+- Database schema modifications
+- New environment variables required
+- Significant architectural changes
+- New setup or deployment procedures
 
 - **[README.md](../README.md)** - Project overview, setup instructions, and features
 - **[ARCHITECTURE.md](../ARCHITECTURE.md)** - Combined architecture approach and folder structure
@@ -447,22 +350,44 @@ socket.emit('chat:message', { text: 'Hello from browser' });
 
 ## Important Notes
 
-1. **Monorepo structure:** Project uses npm workspaces with packages in `packages/` directory
-2. **Three servers required:** Always remember this app requires three separate processes (API, Socket.IO, Next.js)
-3. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types when modifying code
+<<<<<<< HEAD
+=======
+<<<<<<< ours
+1. **Monorepo structure:** Project uses npm workspaces with separate packages
+2. **Three servers:** Always remember this app requires three separate processes
+3. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types
 4. **Package imports:**
-   - API: Use relative imports (`./lib/`, `./routes/`, `./utils/`)
-   - Web: Use path aliases (`@/components/`, `@/lib/`, `@/utils/`) from `packages/web/src`
+   - API: Use relative imports (`./lib/`, `./routes/`)
+   - Web: Use path aliases (`@/components/`, `@/lib/`)
    - Shared: Import as `@chatroom/shared` from other packages
-5. **Prisma workflow:** Schema change → migrate (`npm run prisma:migrate`) → generate (`npm run prisma:generate`) → update code
-6. **Security first:** Never commit secrets, always validate inputs, use environment variables
+5. **Prisma workflow:** Schema change → migrate → generate → update code
+6. **Security first:** Never commit secrets, always validate inputs
 7. **Minimal changes:** Keep PRs focused and avoid unnecessary refactoring
 8. **Documentation:** Update relevant docs when making significant changes
-9. **Environment setup:** Copy `.env.example` to `.env` before starting development
-10. **Server startup order:** Start API server first, then Socket.IO, then Next.js frontend
-11. **Node version:** Use Node 18.x (specified in `.nvmrc`), newer versions may have compatibility issues
+=======
+>>>>>>> main
+1. **Three servers:** Always remember this app requires three separate processes (API, Socket.IO, Next.js)
+2. **Mixed codebase:** Both TypeScript and JavaScript - respect existing file types
+3. **Path aliases:** Always use `@/*` imports, not relative paths across directories
+4. **Prisma workflow:** Schema change → migrate → generate → update code
+5. **Security first:** Never commit secrets, always validate inputs
+6. **Minimal changes:** Keep PRs focused and avoid unnecessary refactoring
+7. **Documentation:** Update relevant docs when making significant changes
+8. **Environment setup:** Copy `.env.example` to `.env` before starting development
+9. **Server startup order:** Start API server first, then Socket.IO, then Next.js frontend
+<<<<<<< HEAD
+=======
+>>>>>>> theirs
+>>>>>>> main
 
 ## Getting Help
+
+- Review documentation in `docs/` directory
+- Check existing code patterns before implementing new features
+- Test changes with all three servers running
+- Use health check endpoints to verify services are running
+- Review Prisma schema for database structure understanding
+- Check commit history for examples of similar changes
 
 - **Issues:** Open an issue on GitHub with detailed description and error logs
 - **Discussions:** Use GitHub Discussions for questions and general help
