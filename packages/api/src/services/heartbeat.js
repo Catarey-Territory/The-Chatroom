@@ -1,9 +1,9 @@
-import { prisma } from '@/lib/prisma';
+const { prisma } = require('../lib/prisma');
 
 /**
  * Process user heartbeat
  */
-export async function processHeartbeat(userId, stayOnline = false) {
+async function processHeartbeat(userId, stayOnline = false) {
   const now = new Date();
   const update = await prisma.user.updateMany({
     where: { id: userId },
@@ -20,8 +20,10 @@ export async function processHeartbeat(userId, stayOnline = false) {
   return { id: user.id, onlineStatus: user.isOnline ? 'ONLINE' : 'OFFLINE', lastActivity: user.lastSeenAt };
 }
 
-export async function getUserPresence(userId) {
+async function getUserPresence(userId) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error('User not found');
   return { id: user.id, onlineStatus: user.isOnline ? (user.stayOnline ? 'ONLINE' : 'AWAY') : 'OFFLINE', lastActivity: user.lastSeenAt };
 }
+
+module.exports = { processHeartbeat, getUserPresence };

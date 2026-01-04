@@ -1,8 +1,8 @@
-import { prisma } from '../lib/prisma';
-import logger from '../utils/logger';
+const { prisma } = require('../lib/prisma');
+const logger = require('../utils/logger');
 
 /** Transition users from Online -> Away after 5 minutes inactivity */
-export async function transitionInactiveUsers() {
+async function transitionInactiveUsers() {
   try {
     const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000);
     const result = await prisma.user.updateMany({
@@ -16,7 +16,7 @@ export async function transitionInactiveUsers() {
 }
 
 /** Clean up expired sessions and temp sessions */
-export async function cleanupExpiredSessions() {
+async function cleanupExpiredSessions() {
   try {
     const refresh = await prisma.session.deleteMany({ where: { expiresAt: { lt: new Date() } } });
     const temp = await prisma.tempSession.deleteMany({ where: { expiresAt: { lt: new Date() } } });
@@ -27,7 +27,7 @@ export async function cleanupExpiredSessions() {
 }
 
 /** Transition users to OFFLINE if no heartbeat in 10 minutes */
-export async function transitionOfflineUsers() {
+async function transitionOfflineUsers() {
   try {
     const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000);
     const result = await prisma.user.updateMany({
@@ -40,7 +40,7 @@ export async function transitionOfflineUsers() {
   }
 }
 
-export function startBackgroundJobs() {
+function startBackgroundJobs() {
   logger.info('Starting background jobs...');
   setInterval(transitionInactiveUsers, 60 * 1000);
   setInterval(cleanupExpiredSessions, 15 * 60 * 1000);
@@ -52,4 +52,4 @@ export function startBackgroundJobs() {
   logger.info('Background jobs started');
 }
 
-export default { startBackgroundJobs };
+module.exports = { startBackgroundJobs };
