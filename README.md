@@ -8,7 +8,7 @@ A real-time chat application with multi-tier authentication, language-specific l
 
 ## 📦 Packages
 
-```bash
+```Script
 The-Chatroom/
 ├── packages/
 │   ├── api/          # Backend REST API (Express + Prisma + PostgreSQL)
