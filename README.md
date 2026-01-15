@@ -342,10 +342,4 @@ See the full schema in [prisma/schema.prisma](prisma/schema.prisma) and detailed
 
 ---
 
-interface ErrorBoundaryProps {
-  children: React.ReactNode;
-}
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-  // ...
-}
+<!-- Example ErrorBoundary component (TypeScript/React) -->
