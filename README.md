@@ -8,7 +8,7 @@ A real-time chat application with multi-tier authentication, language-specific l
 
 ## 📦 Packages
 
-```
+---
 The-Chatroom/
 ├── packages/
 │   ├── api/          # Backend REST API (Express + Prisma + PostgreSQL)
@@ -17,7 +17,8 @@ The-Chatroom/
 │   └── shared/       # Shared types, schemas, and utilities
 ├── docs/             # Documentation
 └── package.json      # Workspace configuration
-```
+
+---
 
 ### Package Details
 
@@ -67,6 +68,7 @@ The-Chatroom/
 ---
 
 ## Project Structure
+
 The-Chatroom/
 ├── server/           # API and Socket.IO servers
 ├── routes/           # API routes
@@ -101,6 +103,7 @@ npm install
 Each package has its own environment configuration:
 
 **API Package** (`packages/api/.env`):
+
 ```bash
 DATABASE_URL="postgresql://user:password@localhost:5432/chatroom"
 ACCESS_TOKEN_SECRET="your-access-secret"
@@ -110,12 +113,14 @@ PORT=3001
 ```
 
 **Socket Package** (`packages/socket/.env`):
+
 ```bash
 SOCKET_PORT=3002
 FRONTEND_URL="http://localhost:3000"
 ```
 
 **Web Package** (`packages/web/.env.local`):
+
 ```bash
 NEXT_PUBLIC_API_URL="http://localhost:3001"
 NEXT_PUBLIC_SOCKET_URL="http://localhost:3002"
@@ -142,9 +147,9 @@ npm run dev:web      # Next.js (http://localhost:3000)
 
 ### 5. Access Application
 
-- **Frontend:** http://localhost:3000
-- **API:** http://localhost:3001
-- **WebSocket:** http://localhost:3002
+- **Frontend:** <http://localhost:3000>
+- **API:** <http://localhost:3001>
+- **WebSocket:** <http://localhost:3002>
 
 ---
 
@@ -157,7 +162,7 @@ Quickly verify the services are healthy and connected.
 curl -s http://localhost:3001/health
 ```
 
-From the browser console on the frontend (http://localhost:3000):
+From the browser console on the frontend (<http://localhost:3000>):
 
 ```js
 (() => {
@@ -199,6 +204,7 @@ NODE_ENV="development"
 ## NPM Scripts
 
 ### Development
+
 ```bash
 npm run dev              # Run all services
 npm run dev:api          # API server only
@@ -207,6 +213,7 @@ npm run dev:web          # Next.js frontend only
 ```
 
 ### Production
+
 ```bash
 npm run build            # Build all packages
 npm run build:web        # Build web only
@@ -217,12 +224,14 @@ npm run start:web        # Start Next.js only
 ```
 
 ### Database
+
 ```bash
 npm run prisma:generate  # Generate Prisma client
 npm run prisma:migrate   # Run database migrations
 ```
 
 ### Utilities
+
 ```bash
 npm run clean            # Clean all build artifacts and node_modules
 ```
@@ -236,7 +245,7 @@ npm run clean            # Clean all build artifacts and node_modules
 
 ---
 
-_Last updated: December 28, 2025_
+### Last updated: January 04, 2026
 
 ⸻
 
@@ -330,3 +339,13 @@ See the full schema in [prisma/schema.prisma](prisma/schema.prisma) and detailed
 ## License
 
 - MIT License. See [LICENSE](LICENSE) for the full text.
+
+---
+
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+  // ...
+}
