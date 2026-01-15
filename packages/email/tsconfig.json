@@ -13,8 +13,9 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "types": []
+    "types": [],
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "../mobile/**", "../../packages/mobile/**"]
+  "exclude": ["node_modules", "dist", "../mobile/**", "../../packages/mobile/**", "**/*.test.ts", "**/*.spec.ts"]
 }
