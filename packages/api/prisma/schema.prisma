@@ -31,9 +31,10 @@ enum VerificationStatus {
   EXPIRED
 }
 
+// Age categories: PLUS_18 (18+), PLUS_18_RED (18+RED)
 enum AgeCategory {
-  EIGHTEEN_PLUS
-  EIGHTEEN_PLUS_RED
+  PLUS_18
+  PLUS_18_RED
 }
 
 enum MessageType {
@@ -134,7 +135,7 @@ model User {
   tempSessions           TempSession[]
   verifications          IDVerification[]
   chatMessages           ChatMessage[]
-  messagesDeleted        ChatMessage[] @relation("deletedBy")
+  deletedMessages        ChatMessage[] @relation("deletedBy")
   marketplaceItems       MarketplaceItem[] @relation("SellerItems")
   transactionsAsBuyer    Transaction[] @relation("buyer")
   transactionsAsSeller   Transaction[] @relation("seller")
@@ -239,8 +240,9 @@ model ChatMessage {
   isFlagged        Boolean  @default(false)
   moderationStatus ModerationStatus @default(APPROVED)
   createdAt        DateTime @default(now())
+  
   moderationActions ModerationAction[]
-  reports          UserReport[]
+  reports           UserReport[]
 }
 
 model MarketplaceItem {
@@ -261,9 +263,10 @@ model MarketplaceItem {
   purchaseCount Int     @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  transactions Transaction[]
+  
+  transactions      Transaction[]
   moderationActions ModerationAction[]
-  reports      UserReport[]
+  reports           UserReport[]
 }
 
 model Transaction {

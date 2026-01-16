@@ -1,6 +1,9 @@
 const { prisma } = require('../lib/prisma');
 const logger = require('../utils/logger');
 
+// Store interval references for cleanup
+const intervals = [];
+
 /** Transition users from Online -> Away after 5 minutes inactivity */
 async function transitionInactiveUsers() {
   try {
@@ -42,14 +45,28 @@ async function transitionOfflineUsers() {
 
 function startBackgroundJobs() {
   logger.info('Starting background jobs...');
-  setInterval(transitionInactiveUsers, 60 * 1000);
-  setInterval(cleanupExpiredSessions, 15 * 60 * 1000);
-  setInterval(transitionOfflineUsers, 5 * 60 * 1000);
-  // run once
+  
+  // Create intervals and store references
+  intervals.push(setInterval(transitionInactiveUsers, 60 * 1000));
+  intervals.push(setInterval(cleanupExpiredSessions, 15 * 60 * 1000));
+  intervals.push(setInterval(transitionOfflineUsers, 5 * 60 * 1000));
+  
+  // Unref intervals to allow graceful shutdown
+  intervals.forEach(interval => interval.unref());
+  
+  // run once on startup
   transitionInactiveUsers();
   cleanupExpiredSessions();
   transitionOfflineUsers();
+  
   logger.info('Background jobs started');
 }
 
-module.exports = { startBackgroundJobs };
+function stopBackgroundJobs() {
+  logger.info('Stopping background jobs...');
+  intervals.forEach(interval => clearInterval(interval));
+  intervals.splice(0, intervals.length); // Clear all elements from array
+  logger.info('Background jobs stopped');
+}
+
+module.exports = { startBackgroundJobs, stopBackgroundJobs };
