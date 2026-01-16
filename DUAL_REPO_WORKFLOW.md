@@ -35,10 +35,10 @@ This document explains how to efficiently work on both repositories together.
 cd /workspaces
 
 # Primary development repo
-git clone https://github.com/telleriacarolina/The-Chatroom.git
+git clone https://github.com/Catarey-Territory/The-Chatroom.git
 
 # Reference repo
-git clone https://github.com/telleriacarolina/LEAVINGROOM4XFACTOR.git leavingroom-ref
+git clone https://github.com/Catarey-Territory/LEAVINGROOM4XFACTOR.git leavingroom-ref
 ```
 
 ### 2. Initialize Working Directories

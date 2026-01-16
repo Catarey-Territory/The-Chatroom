@@ -29,8 +29,9 @@ echo -e "${GREEN}✅ GitHub CLI authenticated${NC}"
 echo ""
 
 # Fork main repository
+
 echo -e "${YELLOW}1. Forking The-Chatroom...${NC}"
-MAIN_REPO="telleriacarolina/The-Chatroom"
+MAIN_REPO="Catarey-Territory/The-Chatroom"
 echo "   Source: $MAIN_REPO"
 
 if gh repo fork "$MAIN_REPO" --clone=false 2>/dev/null; then
@@ -42,8 +43,9 @@ fi
 echo ""
 
 # Fork X-FACTOR repository
+
 echo -e "${YELLOW}2. Forking LEAVINGROOM4xFactor...${NC}"
-XFACTOR_REPO="telleriacarolina/LEAVINGROOM4xFactor"
+XFACTOR_REPO="Catarey-Territory/LEAVINGROOM4XFACTOR"
 echo "   Source: $XFACTOR_REPO"
 
 if gh repo fork "$XFACTOR_REPO" --clone=false 2>/dev/null; then
@@ -59,13 +61,20 @@ echo "To update your local remotes to point to your forks:"
 echo ""
 echo -e "${YELLOW}Main repo:${NC}"
 echo "  cd /workspaces/The-Chatroom"
-echo "  git remote add origin https://github.com/YOUR_USERNAME/The-Chatroom.git"
+echo "  git remote add origin https://github.com/Catarey-Territory/The-Chatroom.git"
 echo "  git push -u origin main"
+echo "  git pull --rebase origin main"
 echo ""
 echo -e "${YELLOW}X-FACTOR repo:${NC}"
 echo "  cd '/workspaces/The-Chatroom/LEAVING ROOM FOR THE X FACTOR'"
-echo "  git remote set-url origin https://github.com/YOUR_USERNAME/LEAVINGROOM4xFactor.git"
+echo "  git remote set-url origin https://github.com/Catarey-Territory/LEAVINGROOM4XFACTOR.git"
 echo "  git push origin main"
+echo ""
+echo -e "${YELLOW}Dotfiles repo:${NC}"
+echo "  git clone https://github.com/telleriacarolina/Dotfiles.git"
+echo ""
+echo -e "${YELLOW}Charlando-En-La-Discoteca repo:${NC}"
+echo "  git clone https://github.com/Catarey-Territory/Charlando-En-La-Discoteca.git"
 echo ""
 echo "View your forks:"
 echo "  gh repo list --fork"
