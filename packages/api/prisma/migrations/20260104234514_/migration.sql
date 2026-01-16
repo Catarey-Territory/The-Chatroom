@@ -1,47 +1,49 @@
--- CreateEnum
-CREATE TYPE "AccountType" AS ENUM ('REGISTERED', 'GUEST');
+-- ENUM types replaced with VARCHAR columns and CHECK constraints for compatibility with non-PostgreSQL databases.
 
--- CreateEnum
-CREATE TYPE "AccountStatus" AS ENUM ('ACTIVE', 'SUSPENDED', 'BANNED', 'DELETED');
+-- AccountType
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "VerificationType" AS ENUM ('AGE_ONLY', 'ID_FULL');
+-- AccountStatus
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "VerificationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'EXPIRED');
+-- VerificationType
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "AgeCategory" AS ENUM ('EIGHTEEN_PLUS', 'EIGHTEEN_PLUS_RED');
+-- VerificationStatus
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "MessageType" AS ENUM ('TEXT', 'IMAGE', 'VIDEO', 'LINK', 'SYSTEM');
+-- AgeCategory
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "ModerationStatus" AS ENUM ('APPROVED', 'PENDING', 'REMOVED');
+-- MessageType
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "Currency" AS ENUM ('USD', 'EUR', 'GBP');
+-- ModerationStatus
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "ItemCategory" AS ENUM ('PHOTOS', 'VIDEOS', 'CUSTOM_CONTENT', 'SERVICES', 'OTHER');
+-- Currency
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "ContentType" AS ENUM ('SFW', 'NSFW');
+-- ItemCategory
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "AccessLevel" AS ENUM ('MAIN_LOUNGE', 'RED_LOUNGE');
+-- ContentType
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "TransactionPaymentMethod" AS ENUM ('STRIPE', 'PAYPAL', 'CRYPTO');
+-- AccessLevel
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "TransactionPaymentStatus" AS ENUM ('PENDING', 'COMPLETED', 'FAILED', 'REFUNDED');
+-- TransactionPaymentMethod
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "ModerationActionType" AS ENUM ('WARNING', 'MUTE', 'KICK', 'BAN_TEMP', 'BAN_PERMANENT', 'MESSAGE_DELETE', 'ITEM_REMOVE');
+-- TransactionPaymentStatus
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
--- CreateEnum
-CREATE TYPE "ReportReason" AS ENUM ('SPAM', 'HARASSMENT', 'INAPPROPRIATE_CONTENT', 'UNDERAGE', 'SCAM', 'OTHER');
+-- ModerationActionType
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
+
+-- ReportReason
+-- Remove ENUM and use VARCHAR with CHECK constraint in table definition.
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -52,13 +54,13 @@ CREATE TABLE "User" (
     "permanentUsername" TEXT,
     "preferredName" TEXT,
     "avatarUrl" TEXT,
-    "accountType" "AccountType" NOT NULL,
+    "accountType" VARCHAR(20) NOT NULL,
     "ageVerified" BOOLEAN NOT NULL DEFAULT false,
     "idVerified" BOOLEAN NOT NULL DEFAULT false,
     "idVerificationDate" TIMESTAMP(3),
     "idVerificationProvider" TEXT,
     "dateOfBirth" TIMESTAMP(3),
-    "accountStatus" "AccountStatus" NOT NULL DEFAULT 'ACTIVE',
+    "accountStatus" VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     "banReason" TEXT,
     "banExpiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -68,7 +70,9 @@ CREATE TABLE "User" (
     "stayOnline" BOOLEAN NOT NULL DEFAULT false,
     "stayOnlineUntil" TIMESTAMP(3),
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "User_accountType_check" CHECK ("accountType" IN ('REGISTERED', 'GUEST')),
+    CONSTRAINT "User_accountStatus_check" CHECK ("accountStatus" IN ('ACTIVE', 'SUSPENDED', 'BANNED', 'DELETED'))
 );
 
 -- CreateTable
@@ -289,7 +293,7 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "TempSession" ADD CONSTRAINT "TempSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "IDVerification" ADD CONSTRAINT "IDVerification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "IDVerification" ADD CONSTRAINT "IDVerification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT;
 
 -- AddForeignKey
 ALTER TABLE "LanguageRoom" ADD CONSTRAINT "LanguageRoom_loungeId_fkey" FOREIGN KEY ("loungeId") REFERENCES "Lounge"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

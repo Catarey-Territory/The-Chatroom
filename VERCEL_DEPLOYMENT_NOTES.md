@@ -25,6 +25,7 @@
 **Problem**: Next.js API routes in packages/web/src/pages/api/* tried to import from API package libraries that don't exist in the web package, causing module resolution failures.
 
 **Solution**: Removed the API routes directory since:
+
 - The API server (packages/api) handles all authentication and backend logic on port 3001
 - These routes couldn't function as serverless functions without the API server's dependencies
 - The web frontend should communicate with the API server via HTTP, not through Next.js API routes
@@ -37,7 +38,12 @@
 
 ## Build Verification
 
-✅ Web package builds successfully:
+ Web package builds successfully:
+
+Route (pages)                             Size     First Load JS
+┌ ○ /                                     5.51 kB        85.4 kB
+├   /_app                                 0 B            79.9 kB
+└ ○ /404                                  180 B          80.1 kB
 ```
 Route (pages)                             Size     First Load JS
 ┌ ○ /                                     5.51 kB        85.4 kB
@@ -46,6 +52,7 @@ Route (pages)                             Size     First Load JS
 ```
 
 ## Files Removed
+
 - packages/web/src/pages/api/auth/* (7 files)
 - packages/web/src/pages/api/presence/* (2 files)
 
