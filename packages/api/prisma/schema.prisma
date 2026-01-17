@@ -130,6 +130,13 @@ model User {
   isOnline               Boolean  @default(false)
   stayOnline             Boolean  @default(false)
   stayOnlineUntil        DateTime?
+  
+  // Moderation fields
+  role                   String   @default("USER") // USER, MODERATOR, ADMIN
+  isFlagged              Boolean  @default(false)
+  isBanned               Boolean  @default(false)
+  isMuted                Boolean  @default(false)
+  muteExpiresAt          DateTime?
 
   sessions               Session[]
   tempSessions           TempSession[]
@@ -146,6 +153,8 @@ model User {
   reportsReceived        UserReport[] @relation("reportedUser")
   reportsReviewed        UserReport[] @relation("reviewer")
   auditLogs              AuditLog[]
+  moderationAppeals      ModerationAppeal[]
+  reviewedAppeals        ModerationAppeal[] @relation("appealReviewer")
 
   posts                  Post[]
 }
@@ -317,6 +326,12 @@ model ModerationAction {
   expiresAt      DateTime?
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
+  
+  appeals        ModerationAppeal[]
+  
+  @@index([targetUserId])
+  @@index([moderatorId])
+  @@index([isActive])
 }
 
 model UserReport {
@@ -336,6 +351,10 @@ model UserReport {
   reviewedById     String?
   reviewedAt       DateTime?
   createdAt        DateTime @default(now())
+  
+  @@index([reportedUserId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model AuditLog {
@@ -347,6 +366,28 @@ model AuditLog {
   ipAddress   String?
   userAgent   String?
   createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+model ModerationAppeal {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id])
+  userId          String
+  moderationAction ModerationAction @relation(fields: [moderationActionId], references: [id])
+  moderationActionId String
+  reason          String
+  status          String   @default("PENDING")
+  reviewedBy      User?    @relation("appealReviewer", fields: [reviewedById], references: [id])
+  reviewedById    String?
+  reviewNotes     String?
+  reviewedAt      DateTime?
+  createdAt       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([status])
 }
 
 model Post {
