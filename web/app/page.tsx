@@ -1,15 +1,33 @@
-import type { Metadata } from 'next'
-import Block from '@/components/chat/Block'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'The Chatroom',
-  description: 'Real-time chat with language-specific lounges',
-}
+import Block from "@/components/chat/Block"
+<<<<<<< HEAD
 
 export default function Home() {
   return (
     <main>
       <Block />
     </main>
+  );
+}
+
+=======
+import { PwaPrompt } from "@/components/PwaPrompt"
+import { registerServiceWorker } from "@/lib/pwa"
+import ErrorBoundary from "@/components/ui/error-boundary"
+
+export default function Page() {
+  useEffect(() => {
+    registerServiceWorker()
+  }, [])
+
+  return (
+    <>
+      <ErrorBoundary>
+        <Block />
+      </ErrorBoundary>
+      <PwaPrompt />
+    </>
   )
 }
+>>>>>>> origin/main
