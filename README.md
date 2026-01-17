@@ -2,13 +2,12 @@
 
 A real-time chat application with multi-tier authentication, language-specific lounges, user marketplace, moderation, and verification system. Built with Node.js, Express, Socket.IO, Next.js, and PostgreSQL.
 
-**📦 Monorepo Structure:** This project is fully consolidated with all code in the `packages/` directory.
+** Monorepo Structure:** This project is fully consolidated with all code in the `packages/` directory.
 
 
-## 📦 Packages
+##  Packages
 
-```,
-
+```
 The-Chatroom/
 ├── packages/
 │   ├── api/          # Backend REST API (Express + Prisma + PostgreSQL)
@@ -17,7 +16,8 @@ The-Chatroom/
 │   └── shared/       # Shared types, schemas, and utilities
 ├── docs/             # Documentation
 └── package.json      # Workspace configuration
-```
+
+---
 
 ### Package Details
 
@@ -196,10 +196,11 @@ node app-standalone.js
 
 ## 5. Access Application
 
-- **Frontend:** <http://localhost:3000>
-- **API:** <http://localhost:3001>
-- **WebSocket:** <http://localhost:3002>
+- **Frontend:** http://localhost:3000
+- **API:** http://localhost:3001
+- **WebSocket:** http://localhost:3002
 
+---
 
 ### Health Checks
 
@@ -209,7 +210,8 @@ Quickly verify the services are healthy and connected.
 # API health (expects a JSON response with status: ok)
 curl -s http://localhost:3001/health
 ```
-From the browser console on the frontend (<http://localhost:3000>):
+
+From the browser console on the frontend (http://localhost:3000):
 
 ```js
 (() => {
@@ -268,8 +270,7 @@ npm run start:socket     # Start Socket.IO only
 npm run start:web        # Start Next.js only
 ```
 
-### Database Setup
-
+### Database
 ```bash
 npm run prisma:generate  # Generate Prisma client
 npm run prisma:migrate   # Run database migrations
@@ -290,7 +291,7 @@ npm run clean            # Clean all build artifacts and node_modules
 
 ---
 
-### Last updated: December 28, 2025
+_Last updated: December 28, 2025_
 
 ⸻
 
@@ -384,3 +385,7 @@ See the full schema in [prisma/schema.prisma](prisma/schema.prisma) and detailed
 ## License
 
 - MIT License. See [LICENSE](LICENSE) for the full text.
+
+---
+
+<!-- Example ErrorBoundary component (TypeScript/React) -->

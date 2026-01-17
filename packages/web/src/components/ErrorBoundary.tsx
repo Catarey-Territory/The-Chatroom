@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Error Boundary must be a Client Component because it uses React lifecycle methods
  * (getDerivedStateFromError, componentDidCatch) and state, which are only available
@@ -7,50 +8,38 @@
 
 import React, { Component, ReactNode } from 'react'
 import { AlertCircle, RefreshCcw } from 'lucide-react'
+=======
+import React from "react";
 
-interface ErrorBoundaryProps {
-  children: ReactNode
-}
+type ErrorBoundaryProps = {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+};
+>>>>>>> origin/copilot/create-error-boundary-component
 
-interface ErrorBoundaryState {
-  hasError: boolean
-  error: Error | null
-}
+type ErrorBoundaryState = {
+  hasError: boolean;
+  error?: Error;
+};
 
-/**
- * Error Boundary component to catch and handle React errors gracefully
- * Displays a friendly error message and provides a reload button
- */
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = {
-      hasError: false,
-      error: null,
-    }
+    super(props);
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    // Update state so the next render will show the fallback UI
-    return {
-      hasError: true,
-      error,
-    }
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    // Log error details to console
-    console.error('Error Boundary caught an error:', error)
-    console.error('Error Info:', errorInfo)
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // You can log the error to an error reporting service here
+    // console.error("ErrorBoundary caught an error", error, errorInfo);
   }
 
-  handleReload = (): void => {
-    // Reload the page to recover from the error
-    window.location.reload()
-  }
-
-  render(): ReactNode {
+  render() {
     if (this.state.hasError) {
+<<<<<<< HEAD
       return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
           <div className="max-w-md w-full">
@@ -86,12 +75,17 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               Reload Page
             </button>
           </div>
+=======
+      return this.props.fallback ?? (
+        <div className="p-4 text-red-600">
+          <h2>Something went wrong.</h2>
+          <pre>{this.state.error?.message}</pre>
+>>>>>>> origin/copilot/create-error-boundary-component
         </div>
-      )
+      );
     }
-
-    return this.props.children
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;
