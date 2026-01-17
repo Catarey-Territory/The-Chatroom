@@ -441,16 +441,9 @@ localStorage.debug = 'socket.io-client:*';
 
 ## Getting Help
 
-**Resources:**
-- **Issues:** Open an issue on GitHub with detailed description and error logs
-- **Discussions:** Use GitHub Discussions for questions and general help
-- **Documentation:** Check the `docs/` folder for detailed guides
-- **Code examples:** Look at existing code for patterns and conventions
+- Check existing documentation in `docs/` directory
+- Review similar code in the codebase for patterns
+- Consult `README.md` for setup issues
+- Check `TODO.md` for context on current work
 
-**Before asking for help:**
-- Review documentation in `docs/` directory
-- Check existing code patterns before implementing new features
-- Test changes with all three servers running
-- Use health check endpoints to verify services are running
-- Review Prisma schema for database structure understanding
-- Check commit history for examples of similar changes
+- @azure Rule - Use Azure Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `azure_development-get_best_practices` tool if available.
