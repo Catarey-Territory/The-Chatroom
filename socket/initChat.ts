@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import prisma from "./lib/prisma";
-import logger from "./lib/logger";
+const prisma = require("./lib/prisma");
+const logger = require("./lib/logger");
 
 /**
  * Socket connection tracking for presence management
@@ -149,9 +149,13 @@ export const initChat = (io: Server) => {
       userId: string; 
       content: string;
       displayUsername: string;
-      messageType?: string;
+      messageType?: "TEXT" | "IMAGE" | "VIDEO" | "LINK" | "SYSTEM";
     }) => {
       try {
+        // Validate messageType
+        const validMessageTypes = ["TEXT", "IMAGE", "VIDEO", "LINK", "SYSTEM"];
+        const validatedMessageType = validMessageTypes.includes(messageType) ? messageType : "TEXT";
+        
         // Create message in database
         const message = await prisma.chatMessage.create({
           data: {
@@ -160,7 +164,7 @@ export const initChat = (io: Server) => {
             userId,
             displayUsername,
             messageText: content,
-            messageType: messageType as any,
+            messageType: validatedMessageType,
             moderationStatus: "APPROVED"
           },
           include: {

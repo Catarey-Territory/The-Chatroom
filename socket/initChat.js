@@ -1,11 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initChat = void 0;
-const prisma_1 = __importDefault(require("./lib/prisma"));
-const logger_1 = __importDefault(require("./lib/logger"));
+const prisma = require("./lib/prisma");
+const logger = require("./lib/logger");
 /**
  * Socket connection tracking for presence management
  * Maps userId to array of socket IDs (for multiple device/tab support)
@@ -22,7 +19,7 @@ const userSockets = new Map();
  */
 const initChat = (io) => {
     io.on("connection", (socket) => {
-        logger_1.default.info(`User connected: ${socket.id}`);
+        logger.info(`User connected: ${socket.id}`);
         /**
          * Handle user joining a lounge
          * Updates presence status and broadcasts user list
@@ -40,7 +37,7 @@ const initChat = (io) => {
                 socket.data.userId = userId;
                 socket.data.loungeId = loungeId;
                 // Update user's online status in database
-                await prisma_1.default.user.update({
+                await prisma.user.update({
                     where: { id: userId },
                     data: {
                         isOnline: true,
@@ -49,7 +46,7 @@ const initChat = (io) => {
                 });
                 // Get all active users in the lounge
                 // We need to find all sessions/temp sessions currently in this lounge
-                const sessions = await prisma_1.default.session.findMany({
+                const sessions = await prisma.session.findMany({
                     where: {
                         isActive: true,
                         user: {
@@ -69,7 +66,7 @@ const initChat = (io) => {
                         }
                     }
                 });
-                const tempSessions = await prisma_1.default.tempSession.findMany({
+                const tempSessions = await prisma.tempSession.findMany({
                     where: {
                         expiresAt: {
                             gt: new Date()
@@ -101,10 +98,10 @@ const initChat = (io) => {
                     userId,
                     timestamp: new Date()
                 });
-                logger_1.default.info(`User ${userId} joined lounge ${loungeId}`);
+                logger.info(`User ${userId} joined lounge ${loungeId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in join-lounge:", error);
+                logger.error("Error in join-lounge:", error);
                 socket.emit("error", { message: "Failed to join lounge" });
             }
         });
@@ -119,10 +116,10 @@ const initChat = (io) => {
                     isTyping,
                     timestamp: new Date()
                 });
-                logger_1.default.debug(`User ${userId} typing status: ${isTyping}`);
+                logger.debug(`User ${userId} typing status: ${isTyping}`);
             }
             catch (error) {
-                logger_1.default.error("Error in typing:", error);
+                logger.error("Error in typing:", error);
             }
         });
         /**
@@ -131,15 +128,18 @@ const initChat = (io) => {
          */
         socket.on("message", async ({ loungeId, languageRoomId, userId, content, displayUsername, messageType = "TEXT" }) => {
             try {
+                // Validate messageType
+                const validMessageTypes = ["TEXT", "IMAGE", "VIDEO", "LINK", "SYSTEM"];
+                const validatedMessageType = validMessageTypes.includes(messageType) ? messageType : "TEXT";
                 // Create message in database
-                const message = await prisma_1.default.chatMessage.create({
+                const message = await prisma.chatMessage.create({
                     data: {
                         loungeId,
                         languageRoomId,
                         userId,
                         displayUsername,
                         messageText: content,
-                        messageType: messageType,
+                        messageType: validatedMessageType,
                         moderationStatus: "APPROVED"
                     },
                     include: {
@@ -167,10 +167,10 @@ const initChat = (io) => {
                     createdAt: message.createdAt,
                     user: message.user
                 });
-                logger_1.default.info(`Message ${message.id} created by user ${userId} in lounge ${loungeId}`);
+                logger.info(`Message ${message.id} created by user ${userId} in lounge ${loungeId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in message creation:", error);
+                logger.error("Error in message creation:", error);
                 socket.emit("error", { message: "Failed to send message" });
             }
         });
@@ -181,7 +181,7 @@ const initChat = (io) => {
         socket.on("edit-message", async ({ messageId, userId, newContent, loungeId }) => {
             try {
                 // Verify the user owns the message
-                const existingMessage = await prisma_1.default.chatMessage.findUnique({
+                const existingMessage = await prisma.chatMessage.findUnique({
                     where: { id: messageId }
                 });
                 if (!existingMessage) {
@@ -193,7 +193,7 @@ const initChat = (io) => {
                     return;
                 }
                 // Update message
-                const updatedMessage = await prisma_1.default.chatMessage.update({
+                const updatedMessage = await prisma.chatMessage.update({
                     where: { id: messageId },
                     data: {
                         messageText: newContent,
@@ -219,10 +219,10 @@ const initChat = (io) => {
                     editedAt: updatedMessage.editedAt,
                     userId: updatedMessage.userId
                 });
-                logger_1.default.info(`Message ${messageId} edited by user ${userId}`);
+                logger.info(`Message ${messageId} edited by user ${userId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in edit-message:", error);
+                logger.error("Error in edit-message:", error);
                 socket.emit("error", { message: "Failed to edit message" });
             }
         });
@@ -233,7 +233,7 @@ const initChat = (io) => {
         socket.on("delete-message", async ({ messageId, userId, loungeId }) => {
             try {
                 // Verify the user owns the message or is a moderator
-                const existingMessage = await prisma_1.default.chatMessage.findUnique({
+                const existingMessage = await prisma.chatMessage.findUnique({
                     where: { id: messageId }
                 });
                 if (!existingMessage) {
@@ -246,7 +246,7 @@ const initChat = (io) => {
                     return;
                 }
                 // Soft delete the message
-                const deletedMessage = await prisma_1.default.chatMessage.update({
+                const deletedMessage = await prisma.chatMessage.update({
                     where: { id: messageId },
                     data: {
                         isDeleted: true,
@@ -261,10 +261,10 @@ const initChat = (io) => {
                     deletedAt: deletedMessage.deletedAt,
                     deletedById: deletedMessage.deletedById
                 });
-                logger_1.default.info(`Message ${messageId} deleted by user ${userId}`);
+                logger.info(`Message ${messageId} deleted by user ${userId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in delete-message:", error);
+                logger.error("Error in delete-message:", error);
                 socket.emit("error", { message: "Failed to delete message" });
             }
         });
@@ -275,7 +275,7 @@ const initChat = (io) => {
         socket.on("mark-read", async ({ messageId, userId }) => {
             try {
                 // Create or update read receipt
-                const readReceipt = await prisma_1.default.messageRead.upsert({
+                const readReceipt = await prisma.messageRead.upsert({
                     where: {
                         messageId_userId: {
                             messageId,
@@ -292,7 +292,7 @@ const initChat = (io) => {
                     }
                 });
                 // Get the message to know which lounge to broadcast to
-                const message = await prisma_1.default.chatMessage.findUnique({
+                const message = await prisma.chatMessage.findUnique({
                     where: { id: messageId },
                     select: { loungeId: true, userId: true }
                 });
@@ -304,10 +304,10 @@ const initChat = (io) => {
                         readAt: readReceipt.readAt
                     });
                 }
-                logger_1.default.debug(`Message ${messageId} marked as read by user ${userId}`);
+                logger.debug(`Message ${messageId} marked as read by user ${userId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in mark-read:", error);
+                logger.error("Error in mark-read:", error);
                 socket.emit("error", { message: "Failed to mark message as read" });
             }
         });
@@ -319,7 +319,7 @@ const initChat = (io) => {
             try {
                 const readAt = new Date();
                 // Create read receipts for all messages
-                const readReceipts = await Promise.all(messageIds.map(messageId => prisma_1.default.messageRead.upsert({
+                const readReceipts = await Promise.all(messageIds.map(messageId => prisma.messageRead.upsert({
                     where: {
                         messageId_userId: {
                             messageId,
@@ -334,7 +334,7 @@ const initChat = (io) => {
                     }
                 })));
                 // Get the lounges for these messages
-                const messages = await prisma_1.default.chatMessage.findMany({
+                const messages = await prisma.chatMessage.findMany({
                     where: { id: { in: messageIds } },
                     select: { id: true, loungeId: true }
                 });
@@ -347,10 +347,10 @@ const initChat = (io) => {
                         readAt
                     });
                 });
-                logger_1.default.debug(`${messageIds.length} messages marked as read by user ${userId}`);
+                logger.debug(`${messageIds.length} messages marked as read by user ${userId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in mark-multiple-read:", error);
+                logger.error("Error in mark-multiple-read:", error);
                 socket.emit("error", { message: "Failed to mark messages as read" });
             }
         });
@@ -371,7 +371,7 @@ const initChat = (io) => {
                 userSockets.get(userId)?.add(socket.id);
                 socket.data.userId = userId;
                 // Update online status
-                await prisma_1.default.user.update({
+                await prisma.user.update({
                     where: { id: userId },
                     data: {
                         isOnline: true,
@@ -385,10 +385,10 @@ const initChat = (io) => {
                         timestamp: new Date()
                     });
                 });
-                logger_1.default.info(`User ${userId} reconnected to ${loungeIds.length} lounges`);
+                logger.info(`User ${userId} reconnected to ${loungeIds.length} lounges`);
             }
             catch (error) {
-                logger_1.default.error("Error in reconnect:", error);
+                logger.error("Error in reconnect:", error);
                 socket.emit("error", { message: "Failed to reconnect" });
             }
         });
@@ -401,7 +401,7 @@ const initChat = (io) => {
                 const userId = socket.data.userId;
                 const loungeId = socket.data.loungeId;
                 if (!userId) {
-                    logger_1.default.info(`Socket ${socket.id} disconnected (no userId)`);
+                    logger.info(`Socket ${socket.id} disconnected (no userId)`);
                     return;
                 }
                 // Remove this socket from user's socket set
@@ -412,7 +412,7 @@ const initChat = (io) => {
                     if (userSocketSet.size === 0) {
                         userSockets.delete(userId);
                         // Update user's online status in database
-                        await prisma_1.default.user.update({
+                        await prisma.user.update({
                             where: { id: userId },
                             data: {
                                 isOnline: false,
@@ -426,16 +426,16 @@ const initChat = (io) => {
                                 timestamp: new Date()
                             });
                         }
-                        logger_1.default.info(`User ${userId} went offline`);
+                        logger.info(`User ${userId} went offline`);
                     }
                     else {
-                        logger_1.default.info(`User ${userId} still has ${userSocketSet.size} active connection(s)`);
+                        logger.info(`User ${userId} still has ${userSocketSet.size} active connection(s)`);
                     }
                 }
-                logger_1.default.info(`Socket ${socket.id} disconnected`);
+                logger.info(`Socket ${socket.id} disconnected`);
             }
             catch (error) {
-                logger_1.default.error("Error in disconnect handler:", error);
+                logger.error("Error in disconnect handler:", error);
             }
         });
         /**
@@ -449,10 +449,10 @@ const initChat = (io) => {
                     userId,
                     timestamp: new Date()
                 });
-                logger_1.default.info(`User ${userId} left lounge ${loungeId}`);
+                logger.info(`User ${userId} left lounge ${loungeId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in leave-lounge:", error);
+                logger.error("Error in leave-lounge:", error);
             }
         });
         /**
@@ -460,7 +460,7 @@ const initChat = (io) => {
          */
         socket.on("get-message-reads", async ({ messageId }) => {
             try {
-                const reads = await prisma_1.default.messageRead.findMany({
+                const reads = await prisma.messageRead.findMany({
                     where: { messageId },
                     include: {
                         user: {
@@ -484,10 +484,10 @@ const initChat = (io) => {
                         user: r.user
                     }))
                 });
-                logger_1.default.debug(`Retrieved ${reads.length} read receipts for message ${messageId}`);
+                logger.debug(`Retrieved ${reads.length} read receipts for message ${messageId}`);
             }
             catch (error) {
-                logger_1.default.error("Error in get-message-reads:", error);
+                logger.error("Error in get-message-reads:", error);
                 socket.emit("error", { message: "Failed to get read receipts" });
             }
         });
@@ -497,7 +497,7 @@ const initChat = (io) => {
         try {
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
             // Find users marked as online but haven't been seen recently
-            const staleUsers = await prisma_1.default.user.findMany({
+            const staleUsers = await prisma.user.findMany({
                 where: {
                     isOnline: true,
                     lastSeenAt: {
@@ -509,7 +509,7 @@ const initChat = (io) => {
                 // Mark them as offline if they're not in our active socket map
                 const usersToMarkOffline = staleUsers.filter(user => !userSockets.has(user.id));
                 if (usersToMarkOffline.length > 0) {
-                    await prisma_1.default.user.updateMany({
+                    await prisma.user.updateMany({
                         where: {
                             id: {
                                 in: usersToMarkOffline.map(u => u.id)
@@ -519,14 +519,14 @@ const initChat = (io) => {
                             isOnline: false
                         }
                     });
-                    logger_1.default.info(`Marked ${usersToMarkOffline.length} stale users as offline`);
+                    logger.info(`Marked ${usersToMarkOffline.length} stale users as offline`);
                 }
             }
         }
         catch (error) {
-            logger_1.default.error("Error in cleanup interval:", error);
+            logger.error("Error in cleanup interval:", error);
         }
     }, 5 * 60 * 1000);
-    logger_1.default.info("Chat system initialized with presence tracking and message management");
+    logger.info("Chat system initialized with presence tracking and message management");
 };
 exports.initChat = initChat;
